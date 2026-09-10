@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Hero Split - Bottom-Line Impact Calculator</title>
+<title>Signal - Bottom-Line Impact Calculator</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap">
 
@@ -187,7 +187,7 @@
   @media (prefers-reduced-motion: reduce){ *{transition:none !important;} }
 </style>
 <style>
-/* ---- 2. Hero Split ---- */
+/* ---- Hero Split layout ---- */
 @media (min-width:1000px){
   body>.wrap{display:grid; grid-template-columns:1fr 1fr; gap:0 40px; align-items:center;}
   body>.wrap>*:nth-child(1){grid-column:1; grid-row:1; padding-top:52px;}
@@ -198,25 +198,58 @@
   .impact-hero{padding:44px 28px;}
   .impact-hero .bignum{font-size:clamp(3rem,6vw,4.6rem);}
 }
+:root,
+:root:not([data-theme="light"]),
+:root[data-theme="dark"]{
+  --paper:#ffffff;
+  --surface:#ffffff;
+  --surface-2:#fff5f0;
+  --ink:#0f172a;
+  --ink-soft:#33333a;
+  --muted:#6e6e6e;
+  --line:rgba(15,23,42,0.13);
+  --line-strong:rgba(254,80,2,0.40);
+  --jlt:#fe5002;
+  --jlt-strong:#c43c00;
+  --jlt-wash:rgba(243,146,0,0.16);
+  --banner-bg:#fe5002;
+  --banner-fg:#0b1220;
+  --banner-border:rgba(15,23,42,0.22);
+  --banner-accent:#2e0c00;
+  --banner-fg-soft:rgba(11,18,32,0.94);
+  --banner-fg-faint:rgba(11,18,32,0.86);
+  --banner-hairline:rgba(11,18,32,0.32);
+  --banner-fill:rgba(255,255,255,0.26);
+  --shadow:0 1px 0 rgba(15,23,42,0.04), 0 10px 28px -16px rgba(254,80,2,0.45);
+  color-scheme:light;
+}
 
-/* ---- layout switcher (preview only, not part of any layout) ---- */
+/* the brand CTA gradient, on the panels themselves */
+.ticker-panel,.verdict{background-image:linear-gradient(48deg,#fe5000 0%,#f39200 85%);}
+.verdict h2{color:#0b1220;}
+.ticker-panel .tnum{color:#0b1220;}
+.tbtn:hover{border-color:#0b1220; background:rgba(255,255,255,.42); color:#0b1220;}
+.tbtn.active{background:#0b1220; border-color:#0b1220; color:#fff;}
+.ticker-check input,.ticker-panel input[type=checkbox]{accent-color:#0b1220;}
+
+/* ---- colour switcher (preview only, not part of any scheme) ---- */
 body{padding-bottom:64px;}
-.vswitch{
+.cswitch{
   position:fixed; left:0; right:0; bottom:0; z-index:50;
   display:flex; flex-wrap:wrap; gap:6px; align-items:center; justify-content:center;
-  padding:9px 12px; background:var(--banner-bg); border-top:1px solid var(--banner-border);
+  padding:9px 12px; background:#0f172a; border-top:1px solid rgba(254,80,2,.34);
   font-family:"Public Sans",system-ui,sans-serif;
 }
-.vswitch b{
-  color:var(--banner-accent); font-size:.66rem; font-weight:700;
+.cswitch b{
+  color:#f39200; font-size:.66rem; font-weight:700;
   letter-spacing:.10em; text-transform:uppercase; margin-right:4px;
 }
-.vswitch a{
-  color:var(--banner-fg); text-decoration:none; font-size:.76rem; font-weight:700;
+.cswitch a{
+  color:#eef1f6; text-decoration:none; font-size:.76rem; font-weight:700;
   padding:5px 10px; border:1px solid rgba(238,241,246,.26); border-radius:6px;
 }
-.vswitch a:hover{border-color:var(--jlt); background:rgba(254,80,2,.20);}
-.vswitch a[aria-current="page"]{background:var(--jlt); border-color:var(--jlt); color:#fff;}
+.cswitch a:hover{border-color:#fe5002; background:rgba(254,80,2,.22);}
+.cswitch a[aria-current="page"]{background:#fe5002; border-color:#fe5002; color:#fff;}
 </style>
 </head>
 <body>
@@ -646,6 +679,6 @@ body{padding-bottom:64px;}
 })();
 </script>
 
-<nav class="vswitch"><b>Layout</b><a href="../index.html">Current</a><a href="1-sidebar.html">Sidebar Console</a><a href="2-hero-split.html" aria-current="page">Hero Split</a><a href="3-stepped.html">Stepped Story</a><a href="4-compact.html">Compact Console</a><a href="5-cards.html">Card Deck</a></nav>
+<nav class="cswitch"><b>Colour</b><a href="a-jlt-light.html">JLT Cool - Light</a><a href="b-jlt-dark.html">JLT Cool - Dark</a><a href="c-signal.html" aria-current="page">Signal</a><a href="d-steel.html">Steel Blue</a><a href="e-pastel.html">Pastel Hero</a><a href="../../index.html">Back to main</a></nav>
 </body>
 </html>

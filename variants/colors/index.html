@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Colour Options - Bottom-Line Impact Calculator</title>
+<style>
+  :root{--paper:#f2f2f2;--surface:#fff;--ink:#0f172a;--ink-soft:#33333a;--muted:#6e6e6e;
+        --line:rgba(15,23,42,.14);--jlt:#fe5002;--jlt-strong:#c43c00;color-scheme:light;}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+        --paper:#0e131b;--surface:#161d28;--ink:#eef1f6;--ink-soft:#c3cad6;--muted:#949dab;
+        --line:rgba(238,241,246,.14);--jlt-strong:#ff8a52;color-scheme:dark;}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);
+       font:15px/1.5 "Public Sans",system-ui,-apple-system,sans-serif;}
+  .w{max-width:760px;margin:0 auto;padding:48px clamp(16px,4vw,32px) 64px;}
+  h1{font-family:"Archivo",system-ui,sans-serif;font-weight:900;font-size:1.7rem;margin:0;}
+  p.lede{color:var(--ink-soft);margin:12px 0 0;}
+  ul{list-style:none;padding:0;margin:28px 0 0;display:grid;gap:10px;}
+  a{display:block;text-decoration:none;color:inherit;background:var(--surface);
+    border:1px solid var(--line);border-radius:10px;padding:16px 18px;}
+  a:hover{border-color:var(--jlt);}
+  .sw{display:flex;gap:4px;margin-bottom:10px;}
+  .sw i{width:26px;height:14px;border-radius:3px;border:1px solid var(--line);}
+  .n{display:block;font-family:"Archivo",system-ui,sans-serif;font-weight:800;
+     font-size:1.02rem;color:var(--jlt-strong);}
+  .d{display:block;font-size:.86rem;color:var(--ink-soft);margin-top:4px;}
+  .back{margin-top:26px;font-size:.86rem;}
+  .back a{display:inline;background:none;border:0;padding:0;color:var(--jlt-strong);
+          font-weight:700;}
+  footer{margin-top:34px;font-size:.78rem;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="w">
+  <h1>Colour options</h1>
+  <p class="lede">Five colour schemes on the <strong>Hero Split</strong> layout. The first
+  two are the palette already in use, split into its light and dark forms; the other three
+  are new. Every scheme is pinned &mdash; it looks the same on your screen as on the
+  screen you show it on, rather than following each viewer's system theme.</p>
+  <ul>
+    <li><a href="a-jlt-light.html">
+      <span class="sw"><i style="background:#f2f2f2"></i><i style="background:#ffffff"></i>
+      <i style="background:#0f172a"></i><i style="background:#fe5002"></i></span>
+      <span class="n">JLT Cool - Light</span><span class="d">The current palette, pinned to light. JLT neutrals, navy panels.</span></a></li>
+    <li><a href="b-jlt-dark.html">
+      <span class="sw"><i style="background:#0e131b"></i><i style="background:#161d28"></i>
+      <i style="background:#0f172a"></i><i style="background:#fe5002"></i></span>
+      <span class="n">JLT Cool - Dark</span><span class="d">The current palette, pinned to dark. Cool slates derived from the navy.</span></a></li>
+    <li><a href="c-signal.html">
+      <span class="sw"><i style="background:#ffffff"></i><i style="background:#ffffff"></i>
+      <i style="background:#fe5002"></i><i style="background:#fe5002"></i></span>
+      <span class="n">Signal</span><span class="d">The brand CTA gradient promoted to the panels. Loudest and most salesy.</span></a></li>
+    <li><a href="d-steel.html">
+      <span class="sw"><i style="background:#eef3f8"></i><i style="background:#ffffff"></i>
+      <i style="background:#0a3255"></i><i style="background:#fe5002"></i></span>
+      <span class="n">Steel Blue</span><span class="d">Their link blue as structure, orange kept for the money. Most technical.</span></a></li>
+    <li><a href="e-pastel.html">
+      <span class="sw"><i style="background:#fbfbf7"></i><i style="background:#ffffff"></i>
+      <i style="background:#0f172a"></i><i style="background:#fe5002"></i></span>
+      <span class="n">Pastel Hero</span><span class="d">The soft cream-to-mint wash from jltmobile.com's own hero. Friendliest.</span></a></li>
+  </ul>
+  <div class="back"><a href="../index.html">&larr; layout options</a> &nbsp;&middot;&nbsp;
+  <a href="../../index.html">the live page</a></div>
+  <footer>Every value here clears WCAG AA for the text that uses it. Pick one and it
+  becomes the main page.</footer>
+</div>
+</body>
+</html>

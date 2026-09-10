@@ -229,9 +229,9 @@
   </section>
 
   <section class="impact-hero">
-    <div class="sub">Daily warehouse output: <span class="mono" id="dailyOutputOut">$400,000</span> / day</div>
+    <div class="sub">Daily warehouse output: <span class="mono" id="dailyOutputOut">$40,000</span> / day</div>
     <div class="eyebrow">Daily bottom-line impact, one computer down</div>
-    <div class="bignum mono" id="dailyImpactOut">$10,000</div>
+    <div class="bignum mono" id="dailyImpactOut">$1,000</div>
     <div class="sub small">This is the number that matters &mdash; everything below is how often you pay it.</div>
     <div class="two-down" id="twoDownBlock" hidden>
       <div class="eyebrow">If two computers are down at the same time</div>
@@ -526,12 +526,6 @@
     $("breakevenYears").textContent = durationText;
     $("breakevenLine").textContent = "At today's settings, " + tierName + "'s downtime losses reach " + fmt$(unitPrice,0) +
       " in just " + durationText + " — enough to have bought one JLT Rugged computer for free. Every other unit in your fleet is running up the same tab at the same time, on top of what you already paid for the " + tierName + " computers themselves.";
-  }
-
-  function tickerRatePerSecond(){
-    var c = state._c || core();
-    var perHour = c.dailyImpact / c._hoursPerDayCache;
-    return perHour;
   }
 
   function renderTicker(){

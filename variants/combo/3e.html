@@ -250,13 +250,6 @@
   .breakeven-reveal{margin-top:20px; padding:22px clamp(16px,3vw,28px); background:var(--jlt-wash); border:1px solid var(--jlt); border-radius:var(--radius); text-align:center;}
   .breakeven-years{font-family:"Archivo"; font-weight:900; font-size:clamp(1.9rem,5vw,2.7rem); color:var(--jlt-strong);}
   .breakeven-line{font-size:.9rem; color:var(--ink-soft); margin-top:10px; max-width:56ch; margin-left:auto; margin-right:auto;}
-  /* shares the prose measure instead of stretching the panel's full width, and
-     the field itself stays compact so the value sits against its own arrows
-     rather than a screen-width away from them */
-  .misc-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
-    gap:16px; max-width:90ch;}
-  .misc-grid .num-input{width:132px;}
-  .misc-grid .num-input input{text-align:right; padding-right:2px;}
 
   /* the derived chart: the assumptions above are only interesting as the numbers
      they produce, so those are shown in full rather than rounded to $787k */
@@ -617,14 +610,9 @@ body{
           title="7 days on repairs + shipping = 10 days for this example">JLT SLA</span>: a 2.5% annual failure rate from JLT's internal TCO model, and a 10-day restore time (7 business days under contract + ~3 days average shipping). The other three platforms have no equivalent published SLA<button type="button" class="badge badge-btn est-toggle"
           aria-expanded="false" aria-controls="estChart"
           title="Show what these assumptions produce">estimate</button> &mdash; their numbers are provisional placeholders until confirmed against a specific competitor's actual commitments, and shouldn't be shown to a customer as verified fact.</p>
-        <div class="misc-grid">
-          <div class="field">
-            <label for="hoursPerDay">Working hours per day</label>
-            <div class="num-input"><input id="hoursPerDay" type="number" min="8" max="24" step="8" value="8"><span class="affix">hrs</span></div>
-            <span class="hint">8, 16 or 24 &mdash; one, two or three shifts. Paces the live
-              ticker; it does not change the annual figures.</span>
-          </div>
-        </div>
+        <p class="assump-note"><b>Working day:</b> this is based on an 8-hour work day.
+        That sets the pace of the live ticker &mdash; a full shift of it adds up to one
+        down-day in the comparison above.</p>
 
         <div class="est-chart" id="estChart" hidden>
           <div class="est-head">
@@ -666,6 +654,12 @@ body{
 
   var state = { running:true, fast:false, simSeconds:0, breakevenTier:null };
   var JLT_UNIT_PRICE = 4000;
+  // A demonstration assumption, stated on the page and not adjustable: it sets
+  // the pace of the live ticker and nothing else. None of the annual or
+  // five-year figures depend on it -- the shift pattern is already carried by
+  // annual output, so scaling the loss by it as well would count throughput
+  // twice.
+  var TICKER_HOURS_PER_DAY = 8;
 
   function $(id){ return document.getElementById(id); }
   function num(id, fallback){
@@ -682,8 +676,6 @@ body{
     return "$" + Number(n).toLocaleString("en-US", {minimumFractionDigits:decimals, maximumFractionDigits:decimals});
   }
   function trimZero(n){ return String(Math.round(n * 10) / 10).replace(/\.0$/, ""); }
-  // "an 8-hour shift", "a 7.5-hour shift" -- 8, 11 and 18 lead with a vowel sound
-  function article(digits){ return /^(8|11|18)/.test(digits) ? "an" : "a"; }
   function fmtShifts(n){
     return n < 1.05 ? "one full shift" : trimZero(n) + " shifts";
   }
@@ -698,8 +690,7 @@ body{
       annualOutput: num("annualOutput", 0),
       workingDays: num("workingDays", 1),
       fleetSize: num("fleetSize", 1),
-      impactPct: num("impactPct", 0),
-      hoursPerDay: num("hoursPerDay", 8)
+      impactPct: num("impactPct", 0)
     };
   }
   function getTier(key){
@@ -947,7 +938,7 @@ body{
         + cumulativeAt(km, ku).toFixed(1) + "% of daily output combined."
       : "While one computer sits unavailable, this is what leaks out of the operation \u2014 "
         + c.f.impactPct.toFixed(1) + "% of daily output.";
-    var perSecondReal = effectiveDailyImpact / (c.f.hoursPerDay*3600);
+    var perSecondReal = effectiveDailyImpact / (TICKER_HOURS_PER_DAY*3600);
     var speed = state.fast ? 360 : 1;
     var shown = perSecondReal * state.simSeconds * speed;
     var shownText = fmt$(shown, 2);
@@ -961,19 +952,13 @@ body{
     // The ticker counts working seconds, not calendar seconds -- a full shift of it
     // equals one down-day in the comparison below. Say so, or the clock reads like
     // wall time and the whole model looks wrong.
-    var shiftSeconds = c.f.hoursPerDay * 3600;
-    if (shiftSeconds > 0){
-      var hrs = trimZero(c.f.hoursPerDay);
-      $("tickerElapsedTime").textContent = simDisplay >= shiftSeconds
-        ? clock + " \u2014 " + fmtShifts(simDisplay / shiftSeconds)
-        : clock + " of " + article(hrs) + " " + hrs + "-hour shift";
-      var perHour = effectiveDailyImpact / c.f.hoursPerDay;
-      $("tickerRate").textContent =
-        fmt$(perHour, perHour >= 100 ? 0 : 2) + " per working hour";
-    } else {
-      $("tickerElapsedTime").textContent = clock;
-      $("tickerRate").textContent = "";
-    }
+    var shiftSeconds = TICKER_HOURS_PER_DAY * 3600;
+    $("tickerElapsedTime").textContent = simDisplay >= shiftSeconds
+      ? clock + " \u2014 " + fmtShifts(simDisplay / shiftSeconds)
+      : clock + " of an " + TICKER_HOURS_PER_DAY + "-hour shift";
+    var perHour = effectiveDailyImpact / TICKER_HOURS_PER_DAY;
+    $("tickerRate").textContent =
+      fmt$(perHour, perHour >= 100 ? 0 : 2) + " per working hour";
   }
 
   var lastTs = null;
@@ -1086,7 +1071,7 @@ body{
       });
     });
 
-    document.querySelectorAll(".field-grid input, .impact-control input, .misc-grid input, .assump-table input")
+    document.querySelectorAll(".field-grid input, .impact-control input, .assump-table input")
       .forEach(function(el){
         el.addEventListener("input", function(){
           if (el.id === "impactPct" || el.id === "impactPctNum") setImpact(el.value, el.id);

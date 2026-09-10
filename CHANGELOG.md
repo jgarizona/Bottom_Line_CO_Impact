@@ -76,10 +76,15 @@
   wraps to two centred lines below 560px, and a middot would dangle at the start
   of the wrapped line. No breakpoint could fix that, since the text length moves
   with the numbers.
-- Working hours per day steps 8 / 16 / 24 -- one, two or three shifts -- instead
-  of 0.5 from a floor of 1. The field is compact and right-aligned so the value
-  sits against its own arrows, and .misc-grid shares the prose measure instead of
-  stretching the panel's full width.
+- Working hours per day went from a 0.5-step field to an 8 / 16 / 24 stepper, then
+  out of the page entirely. It only ever paced the ticker -- none of the annual or
+  five-year figures depend on it, because the shift pattern is already carried by
+  annual output, and scaling the loss by hours as well would count throughput
+  twice -- so an editable control that changed nothing in the money was pure
+  confusion for a demonstration tool. It is now the constant TICKER_HOURS_PER_DAY
+  = 8, stated in the foldout as "this is based on an 8-hour work day". The
+  article() helper went with it: it existed only to pick "a" or "an" for a
+  variable number of hours.
 
 ## The derived chart in Model assumptions
 - The assumption fields are only interesting as the numbers they produce, so

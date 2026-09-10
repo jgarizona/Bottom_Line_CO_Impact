@@ -68,6 +68,16 @@ all three or the previews go stale.
    re-measuring it, not assuming the token is safe everywhere. The derived chart
    uses `--ink-soft` for exactly this reason.
 
+## Fixed assumptions (not inputs)
+- `JLT_UNIT_PRICE = 4000` — the price used by "Free Computers… Almost".
+- `TICKER_HOURS_PER_DAY = 8` — paces the live ticker and nothing else. It was an
+  editable field until it became clear that an adjustable control which moves no
+  money is just confusing in a demo: the shift pattern is already carried by
+  annual output, so scaling the loss by hours as well would count throughput
+  twice. The page states the assumption instead. If you ever make it adjustable
+  again, the ticker label has to go back to deriving its own article ("an 8-hour"
+  vs "a 16-hour").
+
 ## Checking a change before you ship it
 Three generators derive every preview from `index.html`, so run all three after
 any edit: `python3 tools/build-variants.py && python3 tools/build-colors.py &&

@@ -25,7 +25,7 @@ still works and falls back to system fonts.
 | **5-year comparison** | Four platform tiers — Consumer Grade, Semi-Rugged, Rugged, JLT Rugged — each priced by its own failure rate and restore time, with the delta against JLT. |
 | **Free Computers… Almost** | Per tier, how long its downtime losses take to add up to the $4,000 price of one JLT unit. |
 | **The Hidden Cost of Hot and Cold** | Service-life estimates per tier at normal, ~120°F, and ~−22°F ambient. |
-| **Model assumptions** | The failure rates and restore times driving the comparison, editable inline, plus working hours/day for the ticker. Clicking any ESTIMATE badge opens a live chart of what those assumptions produce — failures per year, days down per year, cost per year and the five-year figure, unrounded, for all four platforms. It is fed the same results as the comparison tiles, so the two cannot disagree. |
+| **Model assumptions** | The failure rates and restore times driving the comparison, editable inline, and a statement that the tool assumes an 8-hour work day. Clicking any ESTIMATE badge opens a live chart of what those assumptions produce — failures per year, days down per year, cost per year and the five-year figure, unrounded, for all four platforms. It is fed the same results as the comparison tiles, so the two cannot disagree. |
 
 ## The model
 
@@ -56,7 +56,7 @@ time. Where a customer keeps hot spares, lower the restore time to match.
 | Working days per year | 250 |
 | Fleet size | 10 units |
 | Impact of one unit down | 2.5% |
-| Working hours per day | 8 (steps 8 / 16 / 24 — one, two or three shifts) |
+| Working day (ticker pace only) | 8 hours — fixed, stated on the page, not adjustable |
 
 | Tier | Annual failure rate | Restore time |
 | --- | --- | --- |

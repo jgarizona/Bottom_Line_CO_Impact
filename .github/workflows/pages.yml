@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: ["claude/hopeful-albattani-owrfne"]
+    branches: ["main", "claude/hopeful-albattani-owrfne"]
   workflow_dispatch:
 
 permissions:

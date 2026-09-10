@@ -14,7 +14,11 @@
       $787k over five years; 4% (one unit's proportional share of a 10-unit
       fleet is 10%, so 4% is conservative) roughly doubles it. Concurrency
       settings move it far less.
-- [ ] **Set `main` as the default branch** (Settings → Branches), then delete `claude/hopeful-albattani-owrfne`. `main` is pushed and identical; the deploy workflow already triggers on both, so the switch won't break Pages. Requires admin, can't be done via API.
+- [ ] **Retire `claude/hopeful-albattani-owrfne`.** `main` is the default branch and
+      the `github-pages` environment rule names `main`, so pushes to the old branch
+      now start a deploy that dies in 2-3 seconds with no logs -- a red X on every
+      push that has nothing to do with the change. Drop the branch from the `on:
+      push:` list in `.github/workflows/pages.yml` (one line) and delete the branch.
 - [ ] Get the boss's review/approval — either the Pages link above or the private artifact link (https://claude.ai/code/artifact/f4601223-ab03-4629-a84f-e49e40d2e555).
 - [ ] Confirm the named example platforms in "The Hidden Cost of Hot and Cold" (Apple, Dell Latitude Rugged / Panasonic Toughbook, Honeywell) are okay to name explicitly for this audience, or should be genericized before it goes external.
 - [ ] Reconfirm the fixed $4,000 JLT unit price assumption used in "Free Computers… Almost" is still the right number to use.

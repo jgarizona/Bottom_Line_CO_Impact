@@ -76,6 +76,35 @@
   wraps to two centred lines below 560px, and a middot would dangle at the start
   of the wrapped line. No breakpoint could fix that, since the text length moves
   with the numbers.
+- Working hours per day steps 8 / 16 / 24 -- one, two or three shifts -- instead
+  of 0.5 from a floor of 1. The field is compact and right-aligned so the value
+  sits against its own arrows, and .misc-grid shares the prose measure instead of
+  stretching the panel's full width.
+
+## The derived chart in Model assumptions
+- The assumption fields are only interesting as the numbers they produce, so
+  clicking any ESTIMATE badge in that foldout opens a chart below Working hours
+  per day: failure rate, failures per year, days down per year, cost per year,
+  the five-year figure and failures over five years, for all four platforms.
+  Unrounded, where the tiles show $787k.
+- It is fed the same results array the tiles are fed, so the two cannot disagree,
+  and it re-renders from renderAll -- every input above changes it live.
+- A live basis line states the inputs it rests on, and a footnote says the failure
+  counts are expected values rather than a forecast, and points out that the
+  days-down column does as much work as the failure rate.
+- With the concurrency schedule open the footnote names it. When the schedule is
+  flat it says so and says the totals will not move -- a flat schedule reduces
+  exactly to days down x daily cost, so ticking the box otherwise looks broken.
+  (An earlier draft of this line claimed the figures "run above" the flat rate,
+  which is false: with 2.5% + 2.0% the five-year total falls to $778k.)
+- The badges are real buttons with aria-expanded and a +/- marker, so the control
+  is findable and keyboard-reachable. Hide returns focus to the badge.
+- Below 900px each platform becomes a card with every value labelled. The
+  seven-column table needs about 816px, so on a phone it would have scrolled the
+  five-year column out of sight -- the one number that has to be seen. Header
+  cells wrap now, which is what let the table survive down to 900px at all.
+- The JLT SLA badge in the prose carries the same tooltip as the one beside the
+  repair-time field.
 
 ## Brand and presentation
 - Palette taken from jltmobile.com: #fe5002 accent, #0f172a navy, #33333a body,

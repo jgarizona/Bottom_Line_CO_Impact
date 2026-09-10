@@ -124,6 +124,46 @@ body{
 }
 .hero .callout{background:rgba(255,255,255,.74); border-color:rgba(15,23,42,.10);}
 '''),
+ ('f-jltbanner', 'JLT Banner',
+  "Built from the /rugged-computers hero banner: its cream-to-mint wash, its "
+  "warm off-white, its navy, and its CTA gradient on the buttons.", dict(
+   paper='#f7f5ee', surface='#ffffff', surface_2='#e2ecdc',
+   ink='#0f172a', ink_soft='#33333a', muted='#585858',
+   line='rgba(15,23,42,0.12)', line_strong='rgba(15,23,42,0.22)',
+   jlt='#fe5002', jlt_strong='#c43c00', jlt_wash='rgba(254,80,2,0.09)',
+   banner_bg='#0f172a', banner_fg='#eef1f6', banner_border='rgba(254,80,2,0.28)',
+   banner_accent='#f39200', banner_fg_soft='rgba(238,241,246,0.80)',
+   banner_fg_faint='rgba(238,241,246,0.64)', banner_hairline='rgba(238,241,246,0.28)',
+   banner_fill='rgba(238,241,246,0.10)',
+   shadow='0 1px 0 rgba(15,23,42,0.04), 0 10px 30px -18px rgba(15,23,42,0.30)',
+   scheme='light'), '''
+/* The hero banner itself, full-bleed. Stops read off the /rugged-computers
+   header: warm cream on the left through a pale neutral into soft mint. */
+body{
+  background:
+    linear-gradient(105deg,#f6efcf 0%,#eff0d4 28%,#e2ecdc 58%,#c9e4d7 100%)
+      no-repeat 0 0 / 100% 720px,
+    var(--paper);
+}
+@media (max-width:999px){
+  body{background:
+    linear-gradient(165deg,#f6efcf 0%,#eff0d4 30%,#e2ecdc 62%,#c9e4d7 100%)
+      no-repeat 0 0 / 100% 600px,
+    var(--paper);}
+}
+.hero .callout{background:rgba(255,255,255,.78); border-color:rgba(15,23,42,.10);}
+.tool-tag{background:rgba(255,255,255,.72);}
+
+/* JLT's CTA gradient, exact stops, on the selected controls. Text is navy, not
+   white: white measures 2.35:1 on the #f39200 end, which fails WCAG even at
+   large sizes, while navy clears 5.67:1 at the orange end and 7.96:1 at the
+   amber. The gradient itself is unchanged. */
+.chip.active,.tbtn.active{
+  background:linear-gradient(48deg,#fe5000 0%,#f39200 85%);
+  border-color:#fe5002; color:#0b1220;
+}
+.tbtn.active:hover{color:#0b1220;}
+'''),
 ]
 
 TOKEN_ORDER = [

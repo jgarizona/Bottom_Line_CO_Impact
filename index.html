@@ -20,12 +20,13 @@
     --muted:#8c8471;
     --line:rgba(28,24,16,0.13);
     --line-strong:rgba(28,24,16,0.26);
-    --jlt:#eb6834;
-    --jlt-strong:#c4501f;
-    --jlt-wash:rgba(235,104,52,0.10);
+    --jlt:#fe5002;
+    --jlt-strong:#c43c00;
+    --jlt-wash:rgba(254,80,2,0.10);
     --banner-bg:#2a1c10;
     --banner-fg:#f3ede1;
     --banner-border:rgba(240,180,143,0.22);
+    --banner-accent:#f39200;
     --shadow: 0 1px 0 rgba(28,24,16,0.05), 0 8px 24px -16px rgba(28,24,16,0.35);
     color-scheme: light;
   }
@@ -39,9 +40,9 @@
       --muted:#948b76;
       --line:rgba(243,237,225,0.13);
       --line-strong:rgba(243,237,225,0.26);
-      --jlt:#e07434;
-      --jlt-strong:#f0925c;
-      --jlt-wash:rgba(224,116,52,0.14);
+      --jlt:#fe5002;
+      --jlt-strong:#ff8a52;
+      --jlt-wash:rgba(254,80,2,0.16);
       --shadow: 0 1px 0 rgba(0,0,0,0.4), 0 8px 24px -16px rgba(0,0,0,0.6);
       color-scheme: dark;
     }
@@ -49,7 +50,7 @@
   :root[data-theme="dark"]{
     --paper:#15130d; --surface:#1f1c14; --surface-2:#272319; --ink:#f3ede1; --ink-soft:#c9c0ac; --muted:#948b76;
     --line:rgba(243,237,225,0.13); --line-strong:rgba(243,237,225,0.26);
-    --jlt:#e07434; --jlt-strong:#f0925c; --jlt-wash:rgba(224,116,52,0.14);
+    --jlt:#fe5002; --jlt-strong:#ff8a52; --jlt-wash:rgba(254,80,2,0.16);
     --shadow: 0 1px 0 rgba(0,0,0,0.4), 0 8px 24px -16px rgba(0,0,0,0.6);
     color-scheme: dark;
   }
@@ -119,7 +120,7 @@
   .two-down-math{font-size:.8rem; color:var(--muted); margin-top:6px;}
 
   .ticker-panel{background:var(--banner-bg); color:var(--banner-fg); padding:clamp(22px,4vw,34px); margin:36px 0; text-align:center; border:1px solid var(--banner-border);}
-  .ticker-panel .eyebrow{color:#f0b48f;}
+  .ticker-panel .eyebrow{color:var(--banner-accent);}
   .ticker-panel .tline{font-size:1rem; margin-top:8px; color:rgba(243,237,225,0.78); max-width:52ch; margin-left:auto; margin-right:auto;}
   .ticker-panel .tnum{font-family:"IBM Plex Mono"; font-weight:700; font-size:clamp(2.2rem,7vw,3.4rem); margin-top:18px; color:#fff;}
   .ticker-panel .telapsed{font-size:.82rem; color:rgba(243,237,225,0.6); margin-top:6px;}
@@ -147,7 +148,7 @@
   .tile.win .delta{color:var(--jlt-strong); font-weight:700;}
 
   .verdict{background:var(--banner-bg); color:var(--banner-fg); padding:clamp(24px,4vw,36px); margin:36px 0; text-align:center; border:1px solid var(--banner-border);}
-  .verdict .eyebrow{color:#f0b48f;}
+  .verdict .eyebrow{color:var(--banner-accent);}
   .verdict h2{font-size:clamp(1.15rem,2.4vw,1.55rem); font-weight:800; color:#fff; margin-top:8px; max-width:38ch; margin-left:auto; margin-right:auto;}
   .verdict .fine{font-size:.84rem; color:rgba(243,237,225,0.65); margin-top:14px;}
 

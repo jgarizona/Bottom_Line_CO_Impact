@@ -2,7 +2,9 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: ["main", "claude/hopeful-albattani-owrfne"]
+    # main only: the github-pages environment's deployment branch rule names main,
+    # so a push to any other branch starts a run that dies in seconds with no logs
+    branches: ["main"]
   workflow_dispatch:
 
 permissions:

@@ -6,6 +6,11 @@
       Source is set to **GitHub Actions**; `.github/workflows/pages.yml` redeploys on every push, so no manual step to republish.
 - [x] Process note confirmed in practice: a session's GitHub push access is fixed at session start from the repo picker. This session had `jgarizona/Bottom_Line_CO_Impact` selected up front and pushed with no 403.
 
+## Live now
+The live site carries everything through the derived chart: the shift-basis ticker
+label, the aligned tiles, the estimate chart in Model assumptions, the 8/16/24
+shift stepper, and the narrow-screen overflow fixes.
+
 ## Open — needs Jeff
 - [ ] **Pick a layout and colour** at https://jgarizona.github.io/Bottom_Line_CO_Impact/choose.html
       and send the code (e.g. `2E`); it then becomes the main page.
@@ -14,11 +19,10 @@
       $787k over five years; 4% (one unit's proportional share of a 10-unit
       fleet is 10%, so 4% is conservative) roughly doubles it. Concurrency
       settings move it far less.
-- [ ] **Retire `claude/hopeful-albattani-owrfne`.** `main` is the default branch and
-      the `github-pages` environment rule names `main`, so pushes to the old branch
-      now start a deploy that dies in 2-3 seconds with no logs -- a red X on every
-      push that has nothing to do with the change. Drop the branch from the `on:
-      push:` list in `.github/workflows/pages.yml` (one line) and delete the branch.
+- [ ] **Delete `claude/hopeful-albattani-owrfne` when work on it is finished.** The
+      workflow no longer triggers on it, so it causes no failed runs; it is just
+      the working branch. `main` is the default branch and the deploy source.
+      Nothing depends on the old branch once its work is merged.
 - [ ] Get the boss's review/approval — either the Pages link above or the private artifact link (https://claude.ai/code/artifact/f4601223-ab03-4629-a84f-e49e40d2e555).
 - [ ] Confirm the named example platforms in "The Hidden Cost of Hot and Cold" (Apple, Dell Latitude Rugged / Panasonic Toughbook, Honeywell) are okay to name explicitly for this audience, or should be genericized before it goes external.
 - [ ] Reconfirm the fixed $4,000 JLT unit price assumption used in "Free Computers… Almost" is still the right number to use.

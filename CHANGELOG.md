@@ -106,6 +106,22 @@
 - The JLT SLA badge in the prose carries the same tooltip as the one beside the
   repair-time field.
 
+## Narrow-screen overflow, and the deploy trigger
+- `.chip-row` and `.slider-row` now wrap. `display:flex` defaults to `nowrap`, so
+  the four platform pills in the breakeven foldout ran off a 360px phone -- the
+  last one, JLT Rugged, was unreachable rather than merely clipped -- and the
+  impact stepper ran 10px past a 320px viewport. A range input also needs
+  `min-width:0`, or it refuses to shrink and pushes the row wide anyway.
+  Verified: no horizontal overflow at 1280 / 600 / 414 / 390 / 375 / 360 / 340 /
+  320px, with zero, one and two concurrency boxes ticked, foldouts open and shut,
+  and no chip off-screen in any of the 25 combinations.
+- The Pages workflow triggers on `main` only. The `github-pages` environment's
+  deployment branch rule names `main`, so a push to the working branch started a
+  run that failed in 2-3 seconds with no steps and no logs -- a red X on the
+  commit that had nothing to do with the change. Development still happens on
+  `claude/hopeful-albattani-owrfne`; promoting to the live site is a fast-forward
+  of `main`.
+
 ## Brand and presentation
 - Palette taken from jltmobile.com: #fe5002 accent, #0f172a navy, #33333a body,
   #f2f2f2 page, #757575 muted, #f39200 amber. Neutrals moved from warm brown to

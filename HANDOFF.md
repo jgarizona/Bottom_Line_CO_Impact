@@ -4,7 +4,7 @@
 A one-page interactive sales calculator for JLT Mobile Computers. It demonstrates that JLT Rugged computers protect a customer's bottom line better than Consumer Grade, Semi-Rugged, and (competitor) Rugged platforms, using JLT's lower failure rate and faster contracted repair SLA versus industry estimates.
 
 ## Where things stand right now
-- **Live site (public):** https://jgarizona.github.io/Bottom_Line_CO_Impact/ — served by GitHub Pages from this repo, redeployed automatically by `.github/workflows/pages.yml` on every push. Default branch is `main`; Pages source is GitHub Actions, and the `github-pages` environment's deployment branch rule must name `main` or the deploy is refused before any step runs.
+- **Live site (public):** https://jgarizona.github.io/Bottom_Line_CO_Impact/ — served by GitHub Pages from this repo, redeployed automatically by `.github/workflows/pages.yml` on every push to `main`. It used to trigger on the working branch too, which meant every push there started a run that died in 2-3 seconds with no logs — the environment rule refuses it — so the trigger list is `main` only. Development happens on `claude/hopeful-albattani-owrfne`; promoting is a fast-forward of `main`. Default branch is `main`; Pages source is GitHub Actions, and the `github-pages` environment's deployment branch rule must name `main` or the deploy is refused before any step runs.
 - **Layout / colour chooser:** https://jgarizona.github.io/Bottom_Line_CO_Impact/choose.html
 - **Live preview (private artifact):** https://claude.ai/code/artifact/f4601223-ab03-4629-a84f-e49e40d2e555 — Version 19, the content that was committed.
 - **GitHub repo:** https://github.com/jgarizona/Bottom_Line_CO_Impact — no longer empty. Version 19 landed as commit `66b805e`, pushed from a claude.ai/code session bound to this repo.
@@ -48,7 +48,7 @@ all three or the previews go stale.
   workingDays. A flat schedule reduces exactly to `annualExposureDays *
   dailyImpact`, so the untouched page matches the original spec.
 
-## Two traps this file has already fallen into
+## Four traps this file has already fallen into
 1. **Theme-flipping tokens inside the always-dark panels.** `--paper` and `--ink`
    invert with the page theme; the ticker and verdict panels do not. Using them
    there is what made the ticker buttons invisible in dark mode. Use
@@ -56,6 +56,29 @@ all three or the previews go stale.
    `--banner-fill`, and `--banner-scheme` for native control rendering.
 2. **`.wrap` appears twice** — once in the topbar, once around the content. Layout
    CSS must be scoped to `body > .wrap`, or `nth-child` rules also hit the topbar.
+3. **Flex rows without `flex-wrap`.** `display:flex` defaults to `nowrap`, so a row
+   that fits a laptop pushes its last child off a phone. This bit `.chip-row`
+   (the four platform pills in the breakeven foldout became unreachable at
+   360px) and `.slider-row` (the impact stepper ran 10px past a 320px viewport).
+   Both now wrap; a range input also needs `min-width:0` or it refuses to shrink.
+   When adding any flex row, set `flex-wrap` deliberately.
+4. **Colour tokens are validated against a specific background.** `--muted` is
+   tuned against `--surface` and drops to 4.0–4.45:1 on `--jlt-wash`, under the
+   4.5:1 AA floor for small text. Moving a colour onto a new background means
+   re-measuring it, not assuming the token is safe everywhere. The derived chart
+   uses `--ink-soft` for exactly this reason.
+
+## Checking a change before you ship it
+Three generators derive every preview from `index.html`, so run all three after
+any edit: `python3 tools/build-variants.py && python3 tools/build-colors.py &&
+python3 tools/build-combos.py`. Then check the 25 combination pages, not just
+`index.html` — the schemes carry different token values and have caught real
+defects that `index.html` alone did not show (Signal's stepper colour scheme, the
+`--muted` contrast failure above). Measure geometry and contrast in a browser
+rather than eyeballing a screenshot: every alignment and overflow bug in this
+file's history looked fine until something was measured. Chromium only draws
+native number-input arrows on hover, so a screenshot without hover will not show
+them.
 
 ## Theming note (don't reintroduce this bug)
 CSS uses custom properties for light/dark support. The ticker panel and verdict banner are "always dark" and use fixed `--banner-bg` / `--banner-fg` / `--banner-border` tokens declared ONLY in the base `:root` — never redefine those specific tokens inside the dark-mode blocks, or they'll invert. This bug was introduced and fixed twice already.

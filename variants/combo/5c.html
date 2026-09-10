@@ -102,10 +102,15 @@
   .num-input input:focus{outline:none;}
   .num-input:focus-within{border-color:var(--jlt);}
 
-  .slider-row{display:flex; align-items:center; gap:12px;}
+  /* the slider, its readout and the stepper wrap onto a second line rather than
+     run off the narrowest phones */
+  .slider-row{display:flex; flex-wrap:wrap; align-items:center; gap:12px;}
+  .slider-row input[type="range"]{min-width:0;}
   input[type="range"]{flex:1; accent-color:var(--jlt); height:4px;}
   .slider-val{font-family:"IBM Plex Mono"; font-weight:700; font-size:.92rem; min-width:4ch; text-align:right;}
-  .chip-row{display:flex; gap:6px; margin-top:8px;}
+  /* wrap, or the four platform pills in the breakeven foldout run off a narrow
+     phone -- the last one becomes unreachable rather than merely clipped */
+  .chip-row{display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;}
   .chip{border:1px solid var(--line-strong); border-radius:var(--radius-sm); background:var(--surface); padding:5px 11px; font-size:.74rem; font-weight:700; cursor:pointer; color:var(--ink-soft);}
   .chip:hover{border-color:var(--jlt); color:var(--jlt-strong);}
   .chip.active{background:var(--ink); border-color:var(--ink); color:var(--paper);}

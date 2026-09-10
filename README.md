@@ -21,11 +21,11 @@ still works and falls back to system fonts.
 | --- | --- |
 | **Inputs** | Annual warehouse output, working days/year, fleet size, and the business-impact % of one unit being down (slider plus 1% / 2.5% / 5% presets). |
 | **Daily impact** | The headline number: what one day of one computer being down costs. Optionally shows the two-units-down case. |
-| **Live ticker** | Paces the daily impact out in real time, second by second, while a unit sits unavailable. Pause / reset / fast-forward (1 hr per 10 sec). |
+| **Live ticker** | Paces the daily impact out in real time while a unit sits unavailable, and is mirrored into the hero card so it reads without scrolling. It counts **working** seconds, not calendar seconds — the label states the basis and the per-hour rate, and a full shift of ticking equals one down-day in the comparison below. Pause / reset / fast-forward (1 hr per 10 sec). |
 | **5-year comparison** | Four platform tiers — Consumer Grade, Semi-Rugged, Rugged, JLT Rugged — each priced by its own failure rate and restore time, with the delta against JLT. |
 | **Free Computers… Almost** | Per tier, how long its downtime losses take to add up to the $4,000 price of one JLT unit. |
 | **The Hidden Cost of Hot and Cold** | Service-life estimates per tier at normal, ~120°F, and ~−22°F ambient. |
-| **Model assumptions** | The failure rates and restore times driving the comparison, editable inline, plus working hours/day for the ticker. |
+| **Model assumptions** | The failure rates and restore times driving the comparison, editable inline, plus working hours/day for the ticker. Clicking any ESTIMATE badge opens a live chart of what those assumptions produce — failures per year, days down per year, cost per year and the five-year figure, unrounded, for all four platforms. It is fed the same results as the comparison tiles, so the two cannot disagree. |
 
 ## The model
 
@@ -52,11 +52,11 @@ time. Where a customer keeps hot spares, lower the restore time to match.
 
 | Input | Default |
 | --- | --- |
-| Annual warehouse output | $10,000,000 |
+| Annual warehouse output | $50,000,000 |
 | Working days per year | 250 |
 | Fleet size | 10 units |
 | Impact of one unit down | 2.5% |
-| Working hours per day | 8 |
+| Working hours per day | 8 (steps 8 / 16 / 24 — one, two or three shifts) |
 
 | Tier | Annual failure rate | Restore time |
 | --- | --- | --- |

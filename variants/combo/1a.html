@@ -136,7 +136,7 @@
                  text-transform:uppercase; color:var(--banner-accent); margin-bottom:6px;}
   .cslider .slider-row{gap:14px;}
   .cslider .slider-val{color:var(--banner-fg); min-width:5ch;}
-  .cslider .cum{font-size:.74rem; color:var(--banner-fg-faint); margin-top:6px;}
+  .cum{max-width:430px; margin:10px auto 0; font-size:.74rem; line-height:1.45; color:var(--banner-fg-faint);}
   .ticker-check label{color:var(--banner-fg-soft);}
   .ticker-check input{accent-color:var(--jlt);}
   .ticker-controls{display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:22px;}
@@ -320,8 +320,8 @@
         <input id="impactPct3" type="range" min="1" max="8" step="0.5" value="2.5">
         <span class="slider-val mono" id="impactPct3Val">2.5%</span>
       </div>
-      <div class="cum" id="cumNote"></div>
     </div>
+    <div class="cum" id="cumNote" hidden></div>
     <div class="ticker-controls">
       <button class="tbtn" id="btnPlay" type="button">Pause</button>
       <button class="tbtn" id="btnReset" type="button">Reset</button>
@@ -704,11 +704,25 @@
       state.touched3 = false;
     }
     if (!two) state.touched2 = false;
+    // Show the schedule against the flat rate the model uses when this control is
+    // untouched. Without it, a schedule that steps down looks like it should add
+    // cost while it is actually discounting the days when units overlap.
     var cum = $("cumNote");
-    if (cum && three){
-      var m = marginals(num("impactPct", 2.5));
-      cum.textContent = "Three down together = " + cumulativeAt(m, 3).toFixed(1)
-                      + "% of daily output.";
+    cum.hidden = !two;
+    if (two){
+      var base = num("impactPct", 2.5);
+      var k = downUnits();
+      var mine = cumulativeAt(marginals(base), k);
+      var flat = base * k;
+      var diff = mine - flat;
+      cum.textContent = WORD[k].charAt(0).toUpperCase() + WORD[k].slice(1)
+        + " down together = " + mine.toFixed(1) + "% of daily output"
+        + (Math.abs(diff) < 0.05
+            ? " \u2014 the same as the flat rate this model uses by default."
+            : " \u2014 " + Math.abs(diff).toFixed(1) + " points "
+              + (diff > 0 ? "above" : "below") + " the flat " + flat.toFixed(1)
+              + "% it uses by default, so the five-year totals "
+              + (diff > 0 ? "rise" : "fall") + " slightly.");
     }
   }
 

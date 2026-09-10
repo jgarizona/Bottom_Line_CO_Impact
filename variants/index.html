@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Layout Options - Bottom-Line Impact Calculator</title>
+<style>
+  :root{--paper:#f2f2f2;--surface:#fff;--ink:#0f172a;--ink-soft:#33333a;--muted:#6e6e6e;
+        --line:rgba(15,23,42,.14);--jlt:#fe5002;--jlt-strong:#c43c00;color-scheme:light;}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+        --paper:#0e131b;--surface:#161d28;--ink:#eef1f6;--ink-soft:#c3cad6;--muted:#949dab;
+        --line:rgba(238,241,246,.14);--jlt-strong:#ff8a52;color-scheme:dark;}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);
+       font:15px/1.5 "Public Sans",system-ui,-apple-system,sans-serif;}
+  .w{max-width:760px;margin:0 auto;padding:48px clamp(16px,4vw,32px) 64px;}
+  h1{font-family:"Archivo",system-ui,sans-serif;font-weight:900;font-size:1.7rem;margin:0;}
+  p.lede{color:var(--ink-soft);margin:12px 0 0;}
+  ul{list-style:none;padding:0;margin:28px 0 0;display:grid;gap:10px;}
+  a{display:block;text-decoration:none;color:inherit;background:var(--surface);
+    border:1px solid var(--line);border-radius:10px;padding:16px 18px;}
+  a:hover{border-color:var(--jlt);}
+  .n{display:block;font-family:"Archivo",system-ui,sans-serif;font-weight:800;
+     font-size:1.02rem;color:var(--jlt-strong);}
+  .d{display:block;font-size:.86rem;color:var(--ink-soft);margin-top:4px;}
+  .back{margin-top:26px;font-size:.86rem;}
+  .back a{display:inline;background:none;border:0;padding:0;color:var(--jlt-strong);
+          font-weight:700;}
+  footer{margin-top:34px;font-size:.78rem;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="w">
+  <h1>Layout options</h1>
+  <p class="lede">Five alternative layouts for the Bottom-Line Impact Calculator. Same
+  copy, same maths, same brand colours &mdash; only the arrangement changes. Every one is
+  fully interactive, and each has a switcher bar pinned to the bottom so you can flip
+  between them without coming back here.</p>
+  <ul>
+    <li><a href="1-sidebar.html"><span class="n">Sidebar Console</span><span class="d">Inputs pinned in a sticky left rail; results stream on the right. Reads like a tool.</span></a></li>
+    <li><a href="2-hero-split.html"><span class="n">Hero Split</span><span class="d">Headline and the daily-impact number side by side above the fold. Marketing-forward.</span></a></li>
+    <li><a href="3-stepped.html"><span class="n">Stepped Story</span><span class="d">Numbered stages with a connector rail — built for walking a customer through it.</span></a></li>
+    <li><a href="4-compact.html"><span class="n">Compact Console</span><span class="d">Everything that matters on one screen. Dense, for a live screen-share.</span></a></li>
+    <li><a href="5-cards.html"><span class="n">Card Deck</span><span class="d">Every block an elevated card, two up. Airiest and friendliest of the five.</span></a></li>
+  </ul>
+  <div class="back"><a href="../index.html">&larr; the current layout</a></div>
+  <footer>Light and dark both follow your system setting. Pick one and it becomes the
+  main page.</footer>
+</div>
+</body>
+</html>

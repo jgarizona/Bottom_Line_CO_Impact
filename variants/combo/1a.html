@@ -1,0 +1,659 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>1A - Sidebar Console / JLT Cool - Light</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap">
+
+<style>
+  img{max-width:100%}
+  [hidden]{display:none !important}
+
+  :root{
+    --paper:#f2f2f2;
+    --surface:#ffffff;
+    --surface-2:#e7e8ea;
+    --ink:#0f172a;
+    --ink-soft:#33333a;
+    --muted:#6e6e6e;
+    --line:rgba(15,23,42,0.14);
+    --line-strong:rgba(15,23,42,0.26);
+    --jlt:#fe5002;
+    --jlt-strong:#c43c00;
+    --jlt-wash:rgba(254,80,2,0.10);
+    --banner-bg:#0f172a;
+    --banner-fg:#eef1f6;
+    --banner-border:rgba(254,80,2,0.30);
+    --banner-accent:#f39200;
+    --banner-fg-soft:rgba(238,241,246,0.80);
+    --banner-fg-faint:rgba(238,241,246,0.64);
+    --banner-hairline:rgba(238,241,246,0.28);
+    --banner-fill:rgba(238,241,246,0.10);
+    --shadow: 0 1px 0 rgba(15,23,42,0.04), 0 8px 24px -16px rgba(15,23,42,0.30);
+    --radius:10px;
+    --radius-sm:6px;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#0e131b;
+      --surface:#161d28;
+      --surface-2:#1e2735;
+      --ink:#eef1f6;
+      --ink-soft:#c3cad6;
+      --muted:#949dab;
+      --line:rgba(238,241,246,0.13);
+      --line-strong:rgba(238,241,246,0.26);
+      --jlt:#fe5002;
+      --jlt-strong:#ff8a52;
+      --jlt-wash:rgba(254,80,2,0.16);
+      --shadow: 0 1px 0 rgba(0,0,0,0.4), 0 8px 24px -16px rgba(0,0,0,0.6);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0e131b; --surface:#161d28; --surface-2:#1e2735; --ink:#eef1f6; --ink-soft:#c3cad6; --muted:#949dab;
+    --line:rgba(238,241,246,0.13); --line-strong:rgba(238,241,246,0.26);
+    --jlt:#fe5002; --jlt-strong:#ff8a52; --jlt-wash:rgba(254,80,2,0.16);
+    --shadow: 0 1px 0 rgba(0,0,0,0.4), 0 8px 24px -16px rgba(0,0,0,0.6);
+    color-scheme: dark;
+  }
+
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--paper); color:var(--ink); font-family:"Public Sans", system-ui, sans-serif; line-height:1.48; -webkit-font-smoothing:antialiased;}
+  h1,h2,h3{font-family:"Archivo", system-ui, sans-serif; margin:0; text-wrap:balance;}
+  .mono{font-family:"IBM Plex Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums;}
+  .eyebrow{font-size:.72rem; font-weight:700; letter-spacing:.11em; text-transform:uppercase; color:var(--muted);}
+  .wrap{max-width:1040px; margin:0 auto; padding:0 clamp(16px,4vw,40px);}
+  button, select, input{font-family:inherit; color:inherit;}
+  input:focus-visible, button:focus-visible, summary:focus-visible{outline:2px solid var(--jlt); outline-offset:2px;}
+
+  .topbar{border-bottom:1px solid var(--line); background:var(--surface);}
+  .topbar .wrap{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:16px clamp(16px,4vw,40px);}
+  .wordmark{display:flex; align-items:baseline; gap:.5em;}
+  .wordmark b{font-family:"Archivo"; font-weight:900; font-size:1.25rem; color:var(--jlt); letter-spacing:-.01em;}
+  .wordmark span{font-size:.68rem; font-weight:700; letter-spacing:.13em; color:var(--muted); text-transform:uppercase;}
+  .tool-tag{font-size:.72rem; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--ink-soft); border:1px solid var(--line-strong); border-radius:var(--radius-sm); padding:6px 10px;}
+
+  .hero{padding:40px 0 6px;}
+  .hero h1{font-size:clamp(1.7rem,3.6vw,2.6rem); font-weight:800; max-width:19ch;}
+  .hero .lede{max-width:58ch; color:var(--ink-soft); font-size:1.02rem; margin-top:12px;}
+  .callout{
+    margin-top:20px; padding:14px 18px; background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--jlt);
+    font-size:.9rem; color:var(--ink-soft); max-width:64ch; border-radius:0 var(--radius-sm) var(--radius-sm) 0;
+  }
+  .callout b{color:var(--ink);}
+
+  .section{margin:36px 0;}
+  .section h2{font-size:1.15rem; font-weight:800; margin-bottom:4px;}
+  .section .note{font-size:.82rem; color:var(--muted); max-width:52ch; margin-bottom:16px;}
+
+  .panel{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:22px clamp(16px,3vw,28px);}
+
+  .field-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:18px 22px; align-items:start;}
+  .field label{display:block; font-size:.74rem; font-weight:700; letter-spacing:.04em; color:var(--ink-soft); margin-bottom:6px;}
+  .field .hint{display:block; font-size:.72rem; color:var(--muted); margin-top:5px; font-weight:400;}
+  .num-input{display:flex; align-items:center; border:1px solid var(--line-strong); border-radius:var(--radius-sm); background:var(--paper);}
+  .num-input .affix{padding:0 10px; font-size:.85rem; color:var(--muted); font-weight:600; flex:0 0 auto;}
+  .num-input input{border:0; background:transparent; padding:9px 8px; width:100%; min-width:0; flex:1 1 auto; font-family:"IBM Plex Mono"; font-size:.95rem; font-weight:600; color:var(--ink);}
+  .num-input input:focus{outline:none;}
+  .num-input:focus-within{border-color:var(--jlt);}
+
+  .slider-row{display:flex; align-items:center; gap:12px;}
+  input[type="range"]{flex:1; accent-color:var(--jlt); height:4px;}
+  .slider-val{font-family:"IBM Plex Mono"; font-weight:700; font-size:.92rem; min-width:4ch; text-align:right;}
+  .chip-row{display:flex; gap:6px; margin-top:8px;}
+  .chip{border:1px solid var(--line-strong); border-radius:var(--radius-sm); background:var(--surface); padding:5px 11px; font-size:.74rem; font-weight:700; cursor:pointer; color:var(--ink-soft);}
+  .chip:hover{border-color:var(--jlt); color:var(--jlt-strong);}
+  .chip.active{background:var(--ink); border-color:var(--ink); color:var(--paper);}
+  .check-row{display:flex; align-items:flex-start; gap:8px; margin-top:12px;}
+  .check-row input{width:16px; height:16px; margin-top:2px; accent-color:var(--jlt); flex:0 0 auto;}
+  .check-row label{font-size:.8rem; font-weight:600; color:var(--ink-soft); cursor:pointer;}
+
+  .toggle{display:inline-flex; border:1px solid var(--line-strong); border-radius:var(--radius-sm); overflow:hidden; width:100%;}
+  .toggle button{flex:1; border:0; background:var(--surface); color:var(--ink-soft); padding:9px 14px; font-size:.86rem; font-weight:700; cursor:pointer;}
+  .toggle button.active{background:var(--ink); color:var(--paper);}
+
+  .impact-hero{text-align:center; padding:38px 20px; margin:36px 0; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow);}
+  .impact-hero .sub{font-size:.92rem; color:var(--ink-soft);}
+  .impact-hero .eyebrow{margin-top:18px;}
+  .impact-hero .bignum{font-family:"Archivo"; font-weight:900; font-size:clamp(2.6rem,8vw,4.6rem); color:var(--jlt-strong); line-height:1.05; margin-top:6px;}
+  .impact-hero .sub.small{font-size:.82rem; margin-top:8px;}
+  .two-down{margin-top:26px; padding-top:22px; border-top:1px solid var(--line);}
+  .two-down-num{font-family:"Archivo"; font-weight:800; font-size:clamp(1.5rem,4vw,2.1rem); color:var(--ink); margin-top:4px;}
+  .two-down-math{font-size:.8rem; color:var(--muted); margin-top:6px;}
+
+  .ticker-panel{background:var(--banner-bg); color:var(--banner-fg); padding:clamp(22px,4vw,34px); margin:36px 0; text-align:center; border:1px solid var(--banner-border); border-radius:var(--radius);}
+  .ticker-panel .eyebrow{color:var(--banner-accent);}
+  .ticker-panel .tline{font-size:1rem; margin-top:8px; color:var(--banner-fg-soft); max-width:52ch; margin-left:auto; margin-right:auto;}
+  .ticker-panel .tnum{font-family:"IBM Plex Mono"; font-weight:700; font-size:clamp(2.2rem,7vw,3.4rem); margin-top:18px; color:#fff;}
+  .ticker-panel .telapsed{font-size:.82rem; color:var(--banner-fg-faint); margin-top:6px;}
+  .ticker-check{justify-content:center; margin-top:14px;}
+  .ticker-check label{color:var(--banner-fg-soft);}
+  .ticker-check input{accent-color:var(--jlt);}
+  .ticker-controls{display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:22px;}
+  .tbtn{border:1px solid var(--banner-hairline); border-radius:var(--radius-sm); background:var(--banner-fill); color:var(--banner-fg); padding:9px 18px; font-size:.86rem; font-weight:700; cursor:pointer; transition:background .15s, border-color .15s;}
+  .tbtn:hover{border-color:var(--jlt); background:rgba(254,80,2,0.20); color:#fff;}
+  .tbtn.active{background:var(--jlt); border-color:var(--jlt); color:#fff;}
+
+  .tiles{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:var(--radius); overflow:hidden;}
+  @media (max-width:820px){ .tiles{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:480px){ .tiles{grid-template-columns:1fr;} }
+  .tile{background:var(--surface); padding:20px 18px; border-top:4px solid var(--line-strong); position:relative;}
+  .tile.win{border-top-color:var(--jlt); background:var(--jlt-wash);}
+  .tile .tag{font-size:.68rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--muted);}
+  .tile.win .tag{color:var(--jlt-strong);}
+  .tile .name{font-family:"Archivo"; font-weight:800; font-size:1rem; margin-top:2px;}
+  .tile .spec{font-size:.76rem; color:var(--ink-soft); margin-top:8px; line-height:1.4; min-height:2.8em;}
+  .tile.win .spec{color:var(--jlt-strong);}
+  .tile .amt{font-family:"IBM Plex Mono"; font-weight:700; font-size:clamp(1.25rem,2.4vw,1.55rem); margin-top:14px;}
+  .tile.win .amt{color:var(--jlt-strong);}
+  .tile .delta{font-size:.78rem; color:var(--ink-soft); margin-top:6px; min-height:2.6em;}
+  .tile.win .delta{color:var(--jlt-strong); font-weight:700;}
+
+  .verdict{background:var(--banner-bg); color:var(--banner-fg); padding:clamp(24px,4vw,36px); margin:36px 0; text-align:center; border:1px solid var(--banner-border); border-radius:var(--radius);}
+  .verdict .eyebrow{color:var(--banner-accent);}
+  .verdict h2{font-size:clamp(1.15rem,2.4vw,1.55rem); font-weight:800; color:#fff; margin-top:8px; max-width:38ch; margin-left:auto; margin-right:auto;}
+  .verdict .fine{font-size:.84rem; color:var(--banner-fg-faint); margin-top:14px;}
+
+  details.assumptions{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:16px 20px;}
+  details.assumptions summary{cursor:pointer; font-weight:700; font-size:.92rem; list-style:none;}
+  details.assumptions summary::-webkit-details-marker{display:none;}
+  details.assumptions summary::before{content:"▸ "; color:var(--jlt-strong);}
+  details.assumptions[open] summary::before{content:"▾ "; }
+  .assump-body{margin-top:18px; font-size:.86rem; color:var(--ink-soft);}
+  .assump-note{font-size:.78rem; color:var(--muted); margin-bottom:16px; max-width:66ch;}
+  .assump-table{width:100%; border-collapse:collapse; margin-bottom:20px;}
+  .assump-table.overflow{display:block; overflow-x:auto;}
+  .assump-table th, .assump-table td{padding:9px 10px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top;}
+  .assump-table thead th{font-size:.7rem; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); border-bottom:1px solid var(--line-strong); white-space:nowrap;}
+  .assump-table td.rl{color:var(--ink-soft); font-size:.82rem; white-space:nowrap;}
+  .assump-table .num-input{width:112px; flex:none;}
+  .badge{display:inline-block; font-size:.66rem; font-weight:700; letter-spacing:.05em; text-transform:uppercase; padding:2px 6px; margin-left:6px; border:1px solid var(--line-strong); color:var(--muted);}
+  .badge.validated{color:var(--jlt-strong); border-color:var(--jlt-strong);}
+  .sla-hint{display:inline-block; margin-top:6px; margin-left:6px; font-size:.66rem; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--jlt-strong); border-bottom:1px dotted var(--jlt-strong); cursor:help;}
+  .term-hint{border-bottom:1px dotted var(--jlt-strong); color:var(--jlt-strong); font-weight:700; cursor:help;}
+  .breakeven-reveal{margin-top:20px; padding:22px clamp(16px,3vw,28px); background:var(--jlt-wash); border:1px solid var(--jlt); border-radius:var(--radius); text-align:center;}
+  .breakeven-years{font-family:"Archivo"; font-weight:900; font-size:clamp(1.9rem,5vw,2.7rem); color:var(--jlt-strong);}
+  .breakeven-line{font-size:.9rem; color:var(--ink-soft); margin-top:10px; max-width:56ch; margin-left:auto; margin-right:auto;}
+  .misc-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:16px;}
+
+  footer{border-top:1px solid var(--line); padding:26px 0 40px; margin-top:10px;}
+  footer .wrap{display:flex; flex-wrap:wrap; justify-content:space-between; gap:12px; font-size:.76rem; color:var(--muted);}
+  footer .wrap span{max-width:60ch;}
+
+  @media (prefers-reduced-motion: reduce){ *{transition:none !important;} }
+</style>
+<style>
+/* ---- 1. Sidebar Console ---- */
+@media (min-width:960px){
+  body>.wrap{display:grid; grid-template-columns:330px minmax(0,1fr); gap:0 34px; align-items:start;}
+  body>.wrap>*:nth-child(1){grid-column:1 / -1;}
+  body>.wrap>*:nth-child(2){grid-column:1; grid-row:2 / span 7; position:sticky; top:24px; margin:0;}
+  body>.wrap>*:nth-child(2) .field-grid{grid-template-columns:1fr; gap:16px;}
+  body>.wrap>*:nth-child(2) .panel{padding:20px;}
+  body>.wrap>*:nth-child(n+3){grid-column:2; margin-top:0; margin-bottom:22px;}
+  body>.wrap>*:nth-child(3){margin-top:0;}
+  .hero h1{max-width:26ch;}
+  .hero .lede{max-width:70ch;}
+  .callout{max-width:72ch;}
+  .tiles{grid-template-columns:repeat(2,1fr);}
+}
+:root,
+:root:not([data-theme="light"]),
+:root[data-theme="dark"]{
+  --paper:#f2f2f2;
+  --surface:#ffffff;
+  --surface-2:#e7e8ea;
+  --ink:#0f172a;
+  --ink-soft:#33333a;
+  --muted:#6e6e6e;
+  --line:rgba(15,23,42,0.14);
+  --line-strong:rgba(15,23,42,0.26);
+  --jlt:#fe5002;
+  --jlt-strong:#c43c00;
+  --jlt-wash:rgba(254,80,2,0.10);
+  --banner-bg:#0f172a;
+  --banner-fg:#eef1f6;
+  --banner-border:rgba(254,80,2,0.30);
+  --banner-accent:#f39200;
+  --banner-fg-soft:rgba(238,241,246,0.80);
+  --banner-fg-faint:rgba(238,241,246,0.64);
+  --banner-hairline:rgba(238,241,246,0.28);
+  --banner-fill:rgba(238,241,246,0.10);
+  --shadow:0 1px 0 rgba(15,23,42,0.04), 0 8px 24px -16px rgba(15,23,42,0.30);
+  color-scheme:light;
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <div class="wordmark"><b>JLT</b><span>Mobile Computers</span></div>
+    <div class="tool-tag">Bottom-Line Impact</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <section class="hero">
+    <h1>What does the wrong computer cost your bottom line?</h1>
+    <p class="lede">The core business of your warehouse is moving product out and to your bottom line. When a vehicle computer fails, the warehouse keeps running, but it pays for the disruption: workload shifts to other workers, overtime creeps in, IT and Maintenance gets pulled off its normal work.</p>
+    <div class="callout">10 forklifts. 1 computer fails. Output doesn't fall 10% &mdash; other people and equipment absorb it. The real hit is often just <b>2&ndash;3%</b>. Applied to a warehouse's full daily output, that's still real money.</div>
+  </section>
+
+  <section class="section">
+    <div class="panel">
+      <div class="field-grid">
+        <div class="field">
+          <label for="annualOutput">Annual warehouse output</label>
+          <div class="num-input"><span class="affix">$</span><input id="annualOutput" type="number" min="0" step="100000" value="10000000"></div>
+        </div>
+        <div class="field">
+          <label for="workingDays">Working days per year</label>
+          <div class="num-input"><input id="workingDays" type="number" min="1" step="1" value="250"><span class="affix">days</span></div>
+        </div>
+        <div class="field">
+          <label for="fleetSize">Number of vehicle computers</label>
+          <div class="num-input"><input id="fleetSize" type="number" min="1" step="1" value="10"><span class="affix">units</span></div>
+        </div>
+        <div class="field">
+          <label for="impactPct">Business impact, one computer down</label>
+          <div class="slider-row">
+            <input id="impactPct" type="range" min="0.5" max="8" step="0.1" value="2.5">
+            <span class="slider-val mono" id="impactPctVal">2.5%</span>
+          </div>
+          <div class="chip-row" id="chipRow">
+            <button type="button" class="chip" data-val="1">1%</button>
+            <button type="button" class="chip active" data-val="2.5">2.5%</button>
+            <button type="button" class="chip" data-val="5">5%</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="impact-hero">
+    <div class="sub">Daily warehouse output: <span class="mono" id="dailyOutputOut">$40,000</span> / day</div>
+    <div class="eyebrow">Daily bottom-line impact, one computer down</div>
+    <div class="bignum mono" id="dailyImpactOut">$1,000</div>
+    <div class="sub small">This is the number that matters &mdash; everything below is how often you pay it.</div>
+    <div class="two-down" id="twoDownBlock" hidden>
+      <div class="eyebrow">If two computers are down at the same time</div>
+      <div class="two-down-num mono" id="twoDownOut">$0</div>
+      <div class="two-down-math" id="twoDownMath"></div>
+    </div>
+  </section>
+
+  <div class="ticker-panel">
+    <div class="eyebrow">Right now</div>
+    <div class="tline" id="tickerLine">While one computer sits unavailable, this is what leaks out of the operation.</div>
+    <div class="tnum" id="tickerNum">$0.00</div>
+    <div class="telapsed" id="tickerElapsed">Elapsed 00:00:00</div>
+    <div class="check-row ticker-check">
+      <input type="checkbox" id="showTwoDown">
+      <label for="showTwoDown">Show the cost if two systems are down</label>
+    </div>
+    <div class="ticker-controls">
+      <button class="tbtn" id="btnPlay" type="button">Pause</button>
+      <button class="tbtn" id="btnReset" type="button">Reset</button>
+      <button class="tbtn" id="btnFast" type="button" data-active="0">Fast-forward (1hr/10sec)</button>
+    </div>
+  </div>
+
+  <section class="section">
+    <h2>What does each platform choice cost you over 5 years?</h2>
+    <div class="note">Same operation, same 2&ndash;3%-style impact &mdash; the only thing that changes is how often a platform fails in a year, and how many days it takes to restore service.</div>
+    <div class="tiles" id="tiles"><!-- filled by JS --></div>
+  </section>
+
+  <div class="verdict">
+    <div class="eyebrow">The bottom line</div>
+    <h2 id="verdictLine">Don&rsquo;t compare what the computer costs to buy. Compare what the wrong computer costs your business.</h2>
+    <div class="fine" id="verdictFine">Loading&hellip;</div>
+  </div>
+
+  <section class="section">
+    <details class="assumptions">
+      <summary>Free Computers&hellip; Almost</summary>
+      <div class="assump-body">
+        <p class="assump-note">Inexpensive computers aren't inexpensive to your business. Pick a platform to see how long it would take to buy a <span class="term-hint" title="Price for this exercise estimated at $4,000.">JLT system</span> &mdash; on top of whatever you already paid for that cheaper hardware.</p>
+        <div class="chip-row" id="breakevenPills">
+          <button type="button" class="chip" data-tier="consumer">Consumer Grade</button>
+          <button type="button" class="chip" data-tier="semirugged">Semi-Rugged</button>
+          <button type="button" class="chip" data-tier="rugged">Rugged</button>
+          <button type="button" class="chip" data-tier="jlt">JLT Rugged</button>
+        </div>
+        <div class="breakeven-reveal" id="breakevenReveal" hidden>
+          <div class="breakeven-years mono" id="breakevenYears"></div>
+          <div class="breakeven-line" id="breakevenLine"></div>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section class="section">
+    <details class="assumptions">
+      <summary>The Hidden Cost of Hot and Cold</summary>
+      <div class="assump-body">
+        <p class="assump-note">"Normal planning life" assumes a normal indoor environment. Extreme heat and cold are where cheaper hardware quietly falls apart faster than that number suggests &mdash; long before the warehouse output numbers above ever come into play.</p>
+        <div class="assump-table overflow">
+          <table class="assump-table">
+            <thead><tr><th>Platform</th><th>Normal planning life</th><th>At ~120&deg;F ambient</th><th>At ~&minus;22&deg;F ambient</th></tr></thead>
+            <tbody>
+              <tr>
+                <td class="rl">Consumer Grade<br><span class="badge">estimate</span></td>
+                <td>~3 years</td>
+                <td>&lt;1&ndash;2 years, not rated for the environment</td>
+                <td>Not rated for the environment</td>
+              </tr>
+              <tr>
+                <td class="rl">Semi-Rugged<br><span class="badge">estimate</span></td>
+                <td>~4&ndash;5 years</td>
+                <td>~2&ndash;3 years, depending on actual temperature rating</td>
+                <td>~2&ndash;3 years, depending on actual temperature rating</td>
+              </tr>
+              <tr>
+                <td class="rl">Rugged<br><span class="badge">estimate</span></td>
+                <td>~5 years</td>
+                <td>~4&ndash;5 years &mdash; 120&deg;F stays within spec</td>
+                <td>~4&ndash;5 years &mdash; rated to roughly &minus;22&deg;F</td>
+              </tr>
+              <tr>
+                <td class="rl">JLT Rugged</td>
+                <td>~7+ years</td>
+                <td>Potentially ~7+ years &mdash; built for extreme environments<span class="sla-hint" title="JLT vehicle-mount computers are rated for extreme heat and cold as standard, not as an upgrade.">JLT SLA</span></td>
+                <td>Potentially ~7+ years &mdash; rated to roughly &minus;22&deg;F<span class="sla-hint" title="JLT vehicle-mount computers are rated for extreme heat and cold as standard, not as an upgrade.">JLT SLA</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="assump-note" style="margin-top:14px;">Example platforms: Consumer Grade &mdash; e.g. Apple; Semi-Rugged &mdash; e.g. Dell Latitude Rugged / Panasonic Toughbook semi-rugged class; Rugged &mdash; e.g. Honeywell rugged mobile computer/tablet; JLT Rugged &mdash; JLT vehicle-mount computer. These are directional estimates for a sales conversation, not published manufacturer specs &mdash; confirm against the specific competitor model before presenting externally.</p>
+      </div>
+    </details>
+  </section>
+
+  <section class="section">
+    <details class="assumptions">
+      <summary>Model assumptions (for internal review)</summary>
+      <div class="assump-body">
+        <p class="assump-note">These drive the comparison above but stay out of the customer's way. JLT figures reflect JLT's own TCO model and standard contract terms. Competitor figures are estimates, not published specs &mdash; edit them to match whatever's actually being quoted, and don't present them to a customer as verified fact.</p>
+        <div class="assump-table overflow">
+          <table class="assump-table">
+            <thead><tr><th></th><th>Consumer Grade</th><th>Semi-Rugged</th><th>Rugged</th><th>JLT Rugged</th></tr></thead>
+            <tbody>
+              <tr>
+                <td class="rl">Annual failure rate<br><span class="badge">estimate</span></td>
+                <td><div class="num-input"><input type="number" min="0" step="0.5" value="15" id="fr-consumer"><span class="affix">%</span></div></td>
+                <td><div class="num-input"><input type="number" min="0" step="0.5" value="9" id="fr-semirugged"><span class="affix">%</span></div></td>
+                <td><div class="num-input"><input type="number" min="0" step="0.5" value="4" id="fr-rugged"><span class="affix">%</span></div></td>
+                <td><div class="num-input"><input type="number" min="0" step="0.5" value="2.5" id="fr-jlt"><span class="affix">%</span></div></td>
+              </tr>
+              <tr>
+                <td class="rl">Repair / restore time<br><span class="badge">estimate</span></td>
+                <td><div class="num-input"><input type="number" min="0" step="1" value="21" id="rd-consumer"><span class="affix">days</span></div></td>
+                <td><div class="num-input"><input type="number" min="0" step="1" value="14" id="rd-semirugged"><span class="affix">days</span></div></td>
+                <td><div class="num-input"><input type="number" min="0" step="1" value="14" id="rd-rugged"><span class="affix">days</span></div></td>
+                <td><div class="num-input"><input type="number" min="0" step="1" value="10" id="rd-jlt"><span class="affix">days</span></div><span class="sla-hint" title="7 days on repairs + shipping = 10 days for this example">JLT SLA</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="assump-note"><b>Time period:</b> annual failure rate is the share of the fleet expected to fail within a rolling 12&#8209;month period. Repair/restore time is the number of calendar business days from failure to a working unit back on the vehicle &mdash; there is no spare-swap shortcut in this model; every failure is assumed to run the full restore time.</p>
+        <p class="assump-note" style="margin-bottom:10px;">JLT Rugged's two figures are JLT's own commitments<span class="badge validated">JLT SLA</span>: a 2.5% annual failure rate from JLT's internal TCO model, and a 10-day restore time (7 business days under contract + ~3 days average shipping). The other three platforms have no equivalent published SLA<span class="badge">estimate</span> &mdash; their numbers are provisional placeholders until confirmed against a specific competitor's actual commitments, and shouldn't be shown to a customer as verified fact.</p>
+        <div class="misc-grid">
+          <div class="field">
+            <label for="hoursPerDay">Working hours per day</label>
+            <div class="num-input"><input id="hoursPerDay" type="number" min="1" step="0.5" value="8"><span class="affix">hrs</span></div>
+            <span class="hint">Used only to pace the live ticker below the daily figure.</span>
+          </div>
+        </div>
+      </div>
+    </details>
+  </section>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <span>Planning tool for sales conversations, not a quote. JLT's repair window reflects a standard contract term (7 business days; ~10 working days including shipping). Competitor figures are editable estimates pending validation &mdash; confirm before presenting externally.</span>
+    <span>JLT Mobile Computers &middot; Sales Engineering</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  var TIERS = [
+    { key:"consumer",   name:"Consumer Grade", win:false },
+    { key:"semirugged", name:"Semi-Rugged",    win:false },
+    { key:"rugged",     name:"Rugged",         win:false },
+    { key:"jlt",        name:"JLT Rugged",     win:true  }
+  ];
+
+  var state = { running:true, fast:false, simSeconds:0, breakevenTier:null };
+  var JLT_UNIT_PRICE = 4000;
+
+  function $(id){ return document.getElementById(id); }
+  function num(id, fallback){
+    var el = $(id); if (!el) return fallback;
+    var v = parseFloat(el.value); return isNaN(v) ? fallback : v;
+  }
+  function fmt$(n, decimals){
+    decimals = decimals || 0;
+    return "$" + Number(n).toLocaleString("en-US", {minimumFractionDigits:decimals, maximumFractionDigits:decimals});
+  }
+  function fmtCompact$(n){
+    if (n >= 1000000) return "$" + (n/1000000).toFixed(n>=10000000?0:1) + "M";
+    if (n >= 1000) return "$" + (n/1000).toFixed(n>=10000?0:1) + "k";
+    return "$" + Math.round(n).toLocaleString("en-US");
+  }
+
+  function getInputs(){
+    return {
+      annualOutput: num("annualOutput", 0),
+      workingDays: num("workingDays", 1),
+      fleetSize: num("fleetSize", 1),
+      impactPct: num("impactPct", 0),
+      hoursPerDay: num("hoursPerDay", 8)
+    };
+  }
+  function getTier(key){
+    return { failureRate: num("fr-"+key, 0), repairDays: num("rd-"+key, 0) };
+  }
+
+  function core(){
+    var f = getInputs();
+    var dailyOutput = f.annualOutput / f.workingDays;
+    var dailyImpact = dailyOutput * (f.impactPct/100);
+    return { f:f, dailyOutput:dailyOutput, dailyImpact:dailyImpact };
+  }
+
+  function tierResult(key, c){
+    var t = getTier(key);
+    var effectiveDowntimeDays = t.repairDays;
+    var failuresPerYear = c.f.fleetSize * (t.failureRate/100);
+    var annualExposureDays = failuresPerYear * effectiveDowntimeDays;
+    var annualImpact = annualExposureDays * c.dailyImpact;
+    var fiveYear = annualImpact * 5;
+    return { key:key, t:t, effectiveDowntimeDays:effectiveDowntimeDays, failuresPerYear:failuresPerYear, annualImpact:annualImpact, fiveYear:fiveYear };
+  }
+
+  function buildTilesSkeleton(){
+    $("tiles").innerHTML = TIERS.map(function(t){
+      return '<div class="tile'+(t.win?' win':'')+'" data-tile="'+t.key+'">'+
+        '<div class="tag">'+(t.win ? "JLT" : "Alternative")+'</div>'+
+        '<div class="name">'+t.name+'</div>'+
+        '<div class="spec" data-spec="'+t.key+'"></div>'+
+        '<div class="amt mono" data-amt="'+t.key+'">$0</div>'+
+        '<div class="delta" data-delta="'+t.key+'"></div>'+
+      '</div>';
+    }).join('');
+  }
+
+  function renderAll(){
+    var c = core();
+    $("dailyOutputOut").textContent = fmt$(c.dailyOutput,0);
+    $("dailyImpactOut").textContent = fmt$(c.dailyImpact,0);
+
+    var twoDownChecked = $("showTwoDown").checked;
+    $("twoDownBlock").hidden = !twoDownChecked;
+    if (twoDownChecked){
+      var secondUnitPct = c.f.impactPct * 2;
+      var combinedPct = c.f.impactPct + secondUnitPct;
+      var twoDownDaily = c.dailyOutput * (combinedPct/100);
+      $("twoDownOut").textContent = fmt$(twoDownDaily,0) + " / day";
+      $("twoDownMath").textContent = c.f.impactPct.toFixed(1)+"% for the first unit + "+secondUnitPct.toFixed(1)+"% for the second (2× the rate, as an illustrative estimate) = "+combinedPct.toFixed(1)+"% combined.";
+    }
+
+    var results = TIERS.map(function(t){ return tierResult(t.key, c); });
+    var jlt = results.filter(function(r){return r.key==="jlt";})[0];
+
+    results.forEach(function(r){
+      var amtEl = document.querySelector('[data-amt="'+r.key+'"]');
+      var deltaEl = document.querySelector('[data-delta="'+r.key+'"]');
+      var specEl = document.querySelector('[data-spec="'+r.key+'"]');
+      var frText = (Math.round(r.t.failureRate*10)/10).toFixed(1) + "%";
+      specEl.textContent = r.key === "jlt"
+        ? frText + " annual failure rate · " + r.t.repairDays + "-day contracted restore time"
+        : frText + " annual failure assumption · " + r.t.repairDays + " working-day restore time (estimate)";
+      amtEl.textContent = fmtCompact$(r.fiveYear);
+      if (r.key === "jlt"){
+        deltaEl.textContent = "Lowest projected impact";
+      } else {
+        var diff = r.fiveYear - jlt.fiveYear;
+        deltaEl.textContent = diff >= 0
+          ? fmtCompact$(diff) + " more than JLT over 5 years"
+          : fmtCompact$(Math.abs(diff)) + " less than JLT over 5 years";
+      }
+    });
+
+    var others = results.filter(function(r){return r.key!=="jlt";});
+    var worst = others.reduce(function(a,b){ return b.fiveYear>a.fiveYear?b:a; }, others[0]);
+    var worstTierName = TIERS.filter(function(t){return t.key===worst.key;})[0].name;
+    var diff = worst.fiveYear - jlt.fiveYear;
+    $("verdictFine").textContent = diff > 0
+      ? worstTierName + " costs your operation " + fmtCompact$(diff) + " more than JLT Rugged over five years, on today's settings."
+      : "On today's settings, JLT Rugged is not the lower-impact choice — adjust the assumptions above to match the real fleet.";
+
+    state._c = c;
+    state._results = results;
+    renderBreakeven();
+  }
+
+  function renderBreakeven(){
+    var reveal = $("breakevenReveal");
+    if (!state.breakevenTier || !state._results){ if (reveal) reveal.hidden = true; return; }
+    if (state.breakevenTier === "jlt"){
+      reveal.hidden = false;
+      $("breakevenYears").textContent = "2+ years";
+      $("breakevenLine").textContent = "JLT Rugged computers are built for a 7+ year service life — 2+ years beyond the 5-year cycle other platforms are planned and budgeted around. Those extra years don't just delay a repurchase; they keep paying dividends through continued uptime, deferring the next fleet purchase entirely.";
+      return;
+    }
+    var unitPrice = JLT_UNIT_PRICE;
+    var r = state._results.filter(function(x){ return x.key === state.breakevenTier; })[0];
+    var tierName = TIERS.filter(function(t){ return t.key === state.breakevenTier; })[0].name;
+    reveal.hidden = false;
+    if (r.annualImpact <= 0){
+      $("breakevenYears").textContent = "—";
+      $("breakevenLine").textContent = "At today's settings, " + tierName + " shows no projected annual loss to measure against the " + fmt$(unitPrice,0) + " price of one JLT Rugged computer.";
+      return;
+    }
+    var years = unitPrice / r.annualImpact;
+    var durationText;
+    if (years < 1){
+      var months = years * 12;
+      durationText = months.toFixed(1) + (Math.abs(months - 1) < 0.05 ? " month" : " months");
+    } else {
+      durationText = years.toFixed(1) + (years === 1 ? " year" : " years");
+    }
+    $("breakevenYears").textContent = durationText;
+    $("breakevenLine").textContent = "At today's settings, " + tierName + "'s downtime losses reach " + fmt$(unitPrice,0) +
+      " in just " + durationText + " — enough to have bought one JLT Rugged computer for free. Every other unit in your fleet is running up the same tab at the same time, on top of what you already paid for the " + tierName + " computers themselves.";
+  }
+
+  function renderTicker(){
+    var c = state._c || core();
+    var twoDown = $("showTwoDown").checked;
+    var effectiveDailyImpact = c.dailyImpact;
+    if (twoDown){
+      var combinedPct = c.f.impactPct + (c.f.impactPct*2);
+      effectiveDailyImpact = c.dailyOutput * (combinedPct/100);
+    }
+    $("tickerLine").textContent = twoDown
+      ? "While two computers sit unavailable at once, this is what leaks out of the operation (first unit at the normal rate, second at 2×)."
+      : "While one computer sits unavailable, this is what leaks out of the operation.";
+    var perSecondReal = effectiveDailyImpact / (c.f.hoursPerDay*3600);
+    var speed = state.fast ? 360 : 1;
+    var shown = perSecondReal * state.simSeconds * speed;
+    $("tickerNum").textContent = fmt$(shown, 2);
+    var simDisplay = state.simSeconds * speed;
+    var h = Math.floor(simDisplay/3600), m = Math.floor((simDisplay%3600)/60), s = Math.floor(simDisplay%60);
+    function pad(n){ return (n<10?"0":"")+n; }
+    $("tickerElapsed").textContent = "Elapsed " + pad(h)+":"+pad(m)+":"+pad(s);
+  }
+
+  var lastTs = null;
+  function loop(ts){
+    if (lastTs===null) lastTs = ts;
+    var dt = (ts-lastTs)/1000; lastTs = ts;
+    if (state.running){ state.simSeconds += dt; renderTicker(); }
+    requestAnimationFrame(loop);
+  }
+
+  function wire(){
+    document.querySelectorAll(".field-grid input, .misc-grid input, .assump-table input").forEach(function(el){
+      el.addEventListener("input", function(){
+        if (el.id === "impactPct"){
+          $("impactPctVal").textContent = parseFloat(el.value).toFixed(1)+"%";
+          document.querySelectorAll("#chipRow .chip").forEach(function(c){ c.classList.remove("active"); });
+        }
+        renderAll(); renderTicker();
+      });
+    });
+    document.querySelectorAll("#chipRow .chip").forEach(function(chip){
+      chip.addEventListener("click", function(){
+        document.querySelectorAll("#chipRow .chip").forEach(function(c){ c.classList.remove("active"); });
+        chip.classList.add("active");
+        $("impactPct").value = chip.getAttribute("data-val");
+        $("impactPctVal").textContent = parseFloat(chip.getAttribute("data-val")).toFixed(1)+"%";
+        renderAll(); renderTicker();
+      });
+    });
+    $("showTwoDown").addEventListener("change", function(){ renderAll(); renderTicker(); });
+    document.querySelectorAll("#breakevenPills .chip").forEach(function(pill){
+      pill.addEventListener("click", function(){
+        document.querySelectorAll("#breakevenPills .chip").forEach(function(p){ p.classList.remove("active"); });
+        pill.classList.add("active");
+        state.breakevenTier = pill.getAttribute("data-tier");
+        renderBreakeven();
+      });
+    });
+    $("btnPlay").addEventListener("click", function(){
+      state.running = !state.running;
+      this.textContent = state.running ? "Pause" : "Play";
+    });
+    $("btnReset").addEventListener("click", function(){
+      state.simSeconds = 0; state.running = true; $("btnPlay").textContent = "Pause"; renderTicker();
+    });
+    $("btnFast").addEventListener("click", function(){
+      state.fast = !state.fast;
+      this.classList.toggle("active", state.fast);
+      this.textContent = state.fast ? "Real time" : "Fast-forward (1hr/10sec)";
+    });
+  }
+
+  buildTilesSkeleton();
+  wire();
+  renderAll();
+  renderTicker();
+  requestAnimationFrame(loop);
+})();
+</script>
+
+</body>
+</html>

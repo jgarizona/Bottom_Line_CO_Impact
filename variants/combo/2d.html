@@ -131,6 +131,12 @@
   .ticker-panel .tnum{font-family:"IBM Plex Mono"; font-weight:700; font-size:clamp(2.2rem,7vw,3.4rem); margin-top:18px; color:#fff;}
   .ticker-panel .telapsed{font-size:.82rem; color:var(--banner-fg-faint); margin-top:6px;}
   .ticker-check{justify-content:center; margin-top:14px;}
+  .cslider{max-width:430px; margin:12px auto 0; text-align:left;}
+  .cslider label{display:block; font-size:.72rem; font-weight:700; letter-spacing:.04em;
+                 text-transform:uppercase; color:var(--banner-accent); margin-bottom:6px;}
+  .cslider .slider-row{gap:14px;}
+  .cslider .slider-val{color:var(--banner-fg); min-width:5ch;}
+  .cslider .cum{font-size:.74rem; color:var(--banner-fg-faint); margin-top:6px;}
   .ticker-check label{color:var(--banner-fg-soft);}
   .ticker-check input{accent-color:var(--jlt);}
   .ticker-controls{display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:22px;}
@@ -297,7 +303,26 @@
     <div class="telapsed" id="tickerElapsed">Elapsed 00:00:00</div>
     <div class="check-row ticker-check">
       <input type="checkbox" id="showTwoDown">
-      <label for="showTwoDown">Show the cost if two systems are down</label>
+      <label for="showTwoDown">Show the cost if a second system is down</label>
+    </div>
+    <div class="cslider" id="unit2Row" hidden>
+      <label for="impactPct2">Second unit down &mdash; additional impact</label>
+      <div class="slider-row">
+        <input id="impactPct2" type="range" min="1" max="8" step="0.5" value="2.5">
+        <span class="slider-val mono" id="impactPct2Val">2.5%</span>
+      </div>
+    </div>
+    <div class="check-row ticker-check" id="unit3Check" hidden>
+      <input type="checkbox" id="showThreeDown">
+      <label for="showThreeDown">And a third system</label>
+    </div>
+    <div class="cslider" id="unit3Row" hidden>
+      <label for="impactPct3">Third unit down &mdash; additional impact</label>
+      <div class="slider-row">
+        <input id="impactPct3" type="range" min="1" max="8" step="0.5" value="2.5">
+        <span class="slider-val mono" id="impactPct3Val">2.5%</span>
+      </div>
+      <div class="cum" id="cumNote"></div>
     </div>
     <div class="ticker-controls">
       <button class="tbtn" id="btnPlay" type="button">Pause</button>
@@ -408,11 +433,6 @@
         <p class="assump-note" style="margin-bottom:10px;">JLT Rugged's two figures are JLT's own commitments<span class="badge validated">JLT SLA</span>: a 2.5% annual failure rate from JLT's internal TCO model, and a 10-day restore time (7 business days under contract + ~3 days average shipping). The other three platforms have no equivalent published SLA<span class="badge">estimate</span> &mdash; their numbers are provisional placeholders until confirmed against a specific competitor's actual commitments, and shouldn't be shown to a customer as verified fact.</p>
         <div class="misc-grid">
           <div class="field">
-            <label for="concurrencyMult">Cost of a concurrent failure</label>
-            <div class="num-input"><input id="concurrencyMult" type="number" min="1" step="0.5" value="2"><span class="affix">&times;</span></div>
-            <span class="hint">When one unit is already down, the next failure is priced at this multiple &mdash; there is less slack left to absorb it. Applied to the expected overlap for each platform, so platforms that fail often and take longer to fix are hit hardest.</span>
-          </div>
-          <div class="field">
             <label for="hoursPerDay">Working hours per day</label>
             <div class="num-input"><input id="hoursPerDay" type="number" min="1" step="0.5" value="8"><span class="affix">hrs</span></div>
             <span class="hint">Used only to pace the live ticker below the daily figure.</span>
@@ -480,27 +500,46 @@
     return { f:f, dailyOutput:dailyOutput, dailyImpact:dailyImpact };
   }
 
-  function concurrencyMult(){ return Math.max(1, num("concurrencyMult", 2)); }
+  // Marginal impact of each additional unit that is down at the same time.
+  // One entry per unit; anything beyond the list repeats the last entry.
+  function marginals(basePct){
+    var m = [basePct];
+    if ($("showTwoDown").checked){
+      m.push(num("impactPct2", basePct));
+      if ($("showThreeDown").checked) m.push(num("impactPct3", m[1]));
+    }
+    return m;
+  }
+
+  // total impact, as a % of daily output, when k units are down together
+  function cumulativeAt(m, k){
+    var t = 0;
+    for (var i = 0; i < k; i++) t += m[Math.min(i, m.length - 1)];
+    return t;
+  }
 
   function tierResult(key, c){
     var t = getTier(key);
     var effectiveDowntimeDays = t.repairDays;
     var failuresPerYear = c.f.fleetSize * (t.failureRate/100);
     var annualExposureDays = failuresPerYear * effectiveDowntimeDays;
-    // Some of those unit-days overlap: a unit goes down while another is already
-    // out. Those overlapping days hurt more, so they are priced at the
-    // concurrency multiple. How many there are is not a guess -- for a given
-    // failure rate and repair time the expected overlap is
-    // lambda - (1 - e^-lambda) unit-days per working day, where lambda is the
-    // average number of units down at any moment. A platform that fails often
-    // and takes long to fix overlaps far more, so this widens the gap.
+    // On any given day some number of units are down together, and the schedule
+    // says what that costs. lambda is the average number down at once, which
+    // follows from this platform's failure rate and repair time. Averaging the
+    // schedule over that distribution gives the expected daily loss; a platform
+    // that fails often and takes long to fix spends far more time at k >= 2.
     var lambda = c.f.workingDays > 0 ? annualExposureDays / c.f.workingDays : 0;
-    var overlapDays = Math.max(0, (lambda - (1 - Math.exp(-lambda))) * c.f.workingDays);
-    var pricedDays = annualExposureDays + overlapDays * (concurrencyMult() - 1);
-    var annualImpact = pricedDays * c.dailyImpact;
+    var m = marginals(c.f.impactPct);
+    var pk = Math.exp(-lambda), expectedPct = 0;
+    for (var k = 1; k <= 20; k++){
+      pk = pk * lambda / k;
+      expectedPct += pk * cumulativeAt(m, k);
+    }
+    // With a flat schedule this reduces exactly to annualExposureDays * dailyImpact.
+    var annualImpact = (expectedPct / 100) * c.dailyOutput * c.f.workingDays;
     var fiveYear = annualImpact * 5;
     return { key:key, t:t, effectiveDowntimeDays:effectiveDowntimeDays, failuresPerYear:failuresPerYear,
-             overlapDays:overlapDays, annualImpact:annualImpact, fiveYear:fiveYear };
+             annualImpact:annualImpact, fiveYear:fiveYear };
   }
 
   function buildTilesSkeleton(){
@@ -521,13 +560,18 @@
     $("dailyImpactOut").textContent = fmt$(c.dailyImpact,0);
 
     var twoDownChecked = $("showTwoDown").checked;
+    var units = downUnits();
     $("twoDownBlock").hidden = !twoDownChecked;
     if (twoDownChecked){
-      var secondUnitPct = c.f.impactPct * concurrencyMult();
-      var combinedPct = c.f.impactPct + secondUnitPct;
-      var twoDownDaily = c.dailyOutput * (combinedPct/100);
-      $("twoDownOut").textContent = fmt$(twoDownDaily,0) + " / day";
-      $("twoDownMath").textContent = c.f.impactPct.toFixed(1)+"% for the first unit + "+secondUnitPct.toFixed(1)+"% for the second ("+concurrencyMult()+"× the rate) = "+combinedPct.toFixed(1)+"% combined.";
+      var m = marginals(c.f.impactPct);
+      var combinedPct = cumulativeAt(m, units);
+      $("twoDownOut").textContent = fmt$(c.dailyOutput * (combinedPct/100), 0) + " / day";
+      var parts = [];
+      for (var i = 0; i < units; i++)
+        parts.push(m[Math.min(i, m.length-1)].toFixed(1) + "% for the " + ORDINAL[i]);
+      document.querySelector("#twoDownBlock .eyebrow").textContent =
+        "If " + WORD[units] + " computers are down at the same time";
+      $("twoDownMath").textContent = parts.join(" + ") + " = " + combinedPct.toFixed(1) + "% combined.";
     }
 
     var results = TIERS.map(function(t){ return tierResult(t.key, c); });
@@ -606,11 +650,11 @@
     var twoDown = $("showTwoDown").checked;
     var effectiveDailyImpact = c.dailyImpact;
     if (twoDown){
-      var combinedPct = c.f.impactPct + (c.f.impactPct*concurrencyMult());
-      effectiveDailyImpact = c.dailyOutput * (combinedPct/100);
+      var units = downUnits();
+      effectiveDailyImpact = c.dailyOutput * (cumulativeAt(marginals(c.f.impactPct), units)/100);
     }
     $("tickerLine").textContent = twoDown
-      ? "While two computers sit unavailable at once, this is what leaks out of the operation (first unit at the normal rate, second at "+concurrencyMult()+"×)."
+      ? "While " + WORD[downUnits()] + " computers sit unavailable at once, this is what leaks out of the operation."
       : "While one computer sits unavailable, this is what leaks out of the operation.";
     var perSecondReal = effectiveDailyImpact / (c.f.hoursPerDay*3600);
     var speed = state.fast ? 360 : 1;
@@ -630,7 +674,60 @@
     requestAnimationFrame(loop);
   }
 
+  var ORDINAL = ["first", "second", "third"];
+  var WORD = ["no", "one", "two", "three"];
+
+  function downUnits(){
+    if (!$("showTwoDown").checked) return 1;
+    return $("showThreeDown").checked ? 3 : 2;
+  }
+
+  // A revealed slider starts at whatever the one before it is currently set to,
+  // so opening it changes nothing until it is deliberately moved. Its own step
+  // is 0.5 with a floor of 1.0, so snap the inherited value onto that grid.
+  function inherit(fromId, toId, touchedKey){
+    if (state[touchedKey]) return;
+    var v = num(fromId, 2.5);
+    v = Math.min(8, Math.max(1, Math.round(v * 2) / 2));
+    $(toId).value = v;
+    $(toId + "Val").textContent = v.toFixed(1) + "%";
+  }
+
+  function syncConcurrency(){
+    var two = $("showTwoDown").checked;
+    var three = two && $("showThreeDown").checked;
+    if (two) inherit("impactPct", "impactPct2", "touched2");
+    if (three) inherit("impactPct2", "impactPct3", "touched3");
+    $("unit2Row").hidden = !two;
+    $("unit3Check").hidden = !two;
+    $("unit3Row").hidden = !three;
+    if (!two && $("showThreeDown").checked){
+      $("showThreeDown").checked = false;   // collapsing the second closes the third
+      state.touched3 = false;
+    }
+    if (!two) state.touched2 = false;
+    var cum = $("cumNote");
+    if (cum && three){
+      var m = marginals(num("impactPct", 2.5));
+      cum.textContent = "Three down together = " + cumulativeAt(m, 3).toFixed(1)
+                      + "% of daily output.";
+    }
+  }
+
   function wire(){
+    ["impactPct2", "impactPct3"].forEach(function(id){
+      $(id).addEventListener("input", function(){
+        state[id === "impactPct2" ? "touched2" : "touched3"] = true;
+        $(id + "Val").textContent = parseFloat(this.value).toFixed(1) + "%";
+        syncConcurrency(); renderAll(); renderTicker();
+      });
+    });
+    ["showTwoDown", "showThreeDown"].forEach(function(id){
+      $(id).addEventListener("change", function(){
+        syncConcurrency(); renderAll(); renderTicker();
+      });
+    });
+
     document.querySelectorAll(".field-grid input, .misc-grid input, .assump-table input").forEach(function(el){
       el.addEventListener("input", function(){
         if (el.id === "impactPct"){
@@ -649,7 +746,6 @@
         renderAll(); renderTicker();
       });
     });
-    $("showTwoDown").addEventListener("change", function(){ renderAll(); renderTicker(); });
     document.querySelectorAll("#breakevenPills .chip").forEach(function(pill){
       pill.addEventListener("click", function(){
         document.querySelectorAll("#breakevenPills .chip").forEach(function(p){ p.classList.remove("active"); });
@@ -674,6 +770,7 @@
 
   buildTilesSkeleton();
   wire();
+  syncConcurrency();
   renderAll();
   renderTicker();
   requestAnimationFrame(loop);

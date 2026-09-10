@@ -131,6 +131,16 @@
   .ticker-panel .tline{font-size:1rem; margin-top:8px; color:var(--banner-fg-soft); max-width:52ch; margin-left:auto; margin-right:auto;}
   .ticker-panel .tnum{font-family:"IBM Plex Mono"; font-weight:700; font-size:clamp(2.2rem,7vw,3.4rem); margin-top:18px; color:#fff;}
   .ticker-panel .telapsed{font-size:.82rem; color:var(--banner-fg-faint); margin-top:6px;}
+  /* One line where there is room, two centred lines where there is not. The gap
+     does the separating rather than a printed middot, which would dangle at the
+     start of the wrapped line -- and no breakpoint can predict the wrap, since
+     the text length moves with the numbers. */
+  .ticker-panel .telapsed{display:flex; flex-wrap:wrap; justify-content:center;
+    column-gap:1.6ch; row-gap:1px;}
+  .ticker-panel .telapsed span{white-space:nowrap;}
+  /* the per-hour rate is what lets someone check the ticker in their head, so it
+     reads at full strength rather than the faint colour of the clock */
+  .ticker-panel .telapsed .trate{color:var(--banner-fg-soft); font-weight:700;}
   .ticker-check{justify-content:center; margin-top:14px;}
   .stepwrap{display:inline-flex; align-items:center; gap:5px; margin-left:10px;}
   /* the panel is always dark, so ask the browser for dark native stepper arrows
@@ -309,7 +319,10 @@
     <div class="eyebrow">Right now</div>
     <div class="tline" id="tickerLine">While one computer sits unavailable, this is what leaks out of the operation.</div>
     <div class="tnum" id="tickerNum">$0.00</div>
-    <div class="telapsed" id="tickerElapsed">Elapsed 00:00:00</div>
+    <div class="telapsed" id="tickerElapsed">
+      <span id="tickerElapsedTime">Elapsed 00:00:00 of an 8-hour shift</span>
+      <span class="trate" id="tickerRate">$500 per working hour</span>
+    </div>
     <div class="check-row ticker-check">
       <input type="checkbox" id="showTwoDown">
       <label for="showTwoDown">Additional cost with two systems down</label>
@@ -483,6 +496,12 @@
   function fmt$(n, decimals){
     decimals = decimals || 0;
     return "$" + Number(n).toLocaleString("en-US", {minimumFractionDigits:decimals, maximumFractionDigits:decimals});
+  }
+  function trimZero(n){ return String(Math.round(n * 10) / 10).replace(/\.0$/, ""); }
+  // "an 8-hour shift", "a 7.5-hour shift" -- 8, 11 and 18 lead with a vowel sound
+  function article(digits){ return /^(8|11|18)/.test(digits) ? "an" : "a"; }
+  function fmtShifts(n){
+    return n < 1.05 ? "one full shift" : trimZero(n) + " shifts";
   }
   function fmtCompact$(n){
     if (n >= 1000000) return "$" + (n/1000000).toFixed(n>=10000000?0:1) + "M";
@@ -687,7 +706,24 @@
     var simDisplay = state.simSeconds * speed;
     var h = Math.floor(simDisplay/3600), m = Math.floor((simDisplay%3600)/60), s = Math.floor(simDisplay%60);
     function pad(n){ return (n<10?"0":"")+n; }
-    $("tickerElapsed").textContent = "Elapsed " + pad(h)+":"+pad(m)+":"+pad(s);
+    var clock = "Elapsed " + pad(h)+":"+pad(m)+":"+pad(s);
+
+    // The ticker counts working seconds, not calendar seconds -- a full shift of it
+    // equals one down-day in the comparison below. Say so, or the clock reads like
+    // wall time and the whole model looks wrong.
+    var shiftSeconds = c.f.hoursPerDay * 3600;
+    if (shiftSeconds > 0){
+      var hrs = trimZero(c.f.hoursPerDay);
+      $("tickerElapsedTime").textContent = simDisplay >= shiftSeconds
+        ? clock + " \u2014 " + fmtShifts(simDisplay / shiftSeconds)
+        : clock + " of " + article(hrs) + " " + hrs + "-hour shift";
+      var perHour = effectiveDailyImpact / c.f.hoursPerDay;
+      $("tickerRate").textContent =
+        fmt$(perHour, perHour >= 100 ? 0 : 2) + " per working hour";
+    } else {
+      $("tickerElapsedTime").textContent = clock;
+      $("tickerRate").textContent = "";
+    }
   }
 
   var lastTs = null;

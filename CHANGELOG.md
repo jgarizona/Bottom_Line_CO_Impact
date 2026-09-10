@@ -64,6 +64,18 @@
   views of one value.
 - Added "Adjust the number to see what the wrong computers do to your bottom
   line" above the inputs.
+- The elapsed line now names the basis the money is counted on: "Elapsed
+  00:01:59 of an 8-hour shift  $500 per working hour". The ticker always counted
+  working seconds (dailyImpact / hoursPerDay x 3600), so a full shift of it
+  equals one down-day in the comparison below -- but the clock read like wall
+  time, which invited the objection that the whole model was on a 24-hour basis.
+  Both halves read from hoursPerDay and the concurrency schedule, and the
+  per-hour rate is the sanity check that makes the ticker verifiable in someone's
+  head. Past a shift the clock says "one full shift", then "2.4 shifts".
+  The two halves are separated by a flex gap, not a printed middot: the line
+  wraps to two centred lines below 560px, and a middot would dangle at the start
+  of the wrapped line. No breakpoint could fix that, since the text length moves
+  with the numbers.
 
 ## Brand and presentation
 - Palette taken from jltmobile.com: #fe5002 accent, #0f172a navy, #33333a body,

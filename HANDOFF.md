@@ -4,9 +4,10 @@
 A one-page interactive sales calculator for JLT Mobile Computers. It demonstrates that JLT Rugged computers protect a customer's bottom line better than Consumer Grade, Semi-Rugged, and (competitor) Rugged platforms, using JLT's lower failure rate and faster contracted repair SLA versus industry estimates.
 
 ## Where things stand right now
-- **Live preview (private artifact):** https://claude.ai/code/artifact/f4601223-ab03-4629-a84f-e49e40d2e555 — currently Version 19.
-- **GitHub repo (target):** https://github.com/jgarizona/Bottom_Line_CO_Impact — created by Jeff, empty as of this handoff. A separate claude.ai/code session (bound to this repo, launched by Jeff directly) is in progress pushing the initial `index.html`.
-- **Source file used to build every version in this conversation:** `downtime-meter.html` — a single self-contained HTML/CSS/JS file (no external deps except Google Fonts).
+- **Live site (public):** https://jgarizona.github.io/Bottom_Line_CO_Impact/ — served by GitHub Pages from this repo, redeployed automatically by `.github/workflows/pages.yml` on every push.
+- **Live preview (private artifact):** https://claude.ai/code/artifact/f4601223-ab03-4629-a84f-e49e40d2e555 — Version 19, the content that was committed.
+- **GitHub repo:** https://github.com/jgarizona/Bottom_Line_CO_Impact — no longer empty. Version 19 landed as commit `66b805e`, pushed from a claude.ai/code session bound to this repo.
+- **Source file:** built in conversation as `downtime-meter.html`; committed to the repo as **`index.html`** (the name GitHub Pages needs to serve it at the root URL). Still a single self-contained HTML/CSS/JS file, no external deps except Google Fonts.
 
 ## Design source of truth
 Built from Jeff's own authoritative spec, `JLT_Bottom_Line_Calculator_Project.md` (uploaded earlier in this conversation, never modified by Claude). It defines: 5 simple customer inputs only, a specific formula chain, hiding granular cost assumptions behind an expandable "Model assumptions" section, avoiding a spreadsheet/chart-heavy look, and closing with: *"Don't compare what the computer costs to buy. Compare what the wrong computer costs your business."*

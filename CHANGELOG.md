@@ -24,3 +24,10 @@
 - **v19** — Reworded the awkward closing sentence in the breakeven result line, from "Multiply that across your whole fleet, and that's on top of..." to "Every other unit in your fleet is running up the same tab at the same time, on top of..."
 - Diagnosed and resolved GitHub push access: found the Claude GitHub App was authorized but not installed on Jeff's GitHub account; walked through claude.ai/code's "Install on GitHub" flow live in the browser to fix it. Confirmed GitHub has no generic MCP connector — repo push access is a dedicated, session-scoped integration.
 - Created this handoff/changelog/todo set so work can continue in a claude.ai/code session bound to the `Bottom_Line_CO_Impact` repo.
+
+## Repo and deployment
+- Committed Version 19 to `jgarizona/Bottom_Line_CO_Impact` as `index.html`, with a `README.md` documenting the model math, defaults, and the JLT-SLA-vs-competitor-estimate distinction. Version confirmed by reproducing v18's breakeven figures (1.5mo / 3.8mo / 8.6mo) and checking the v14-v19 copy markers.
+- Verified the theming invariant from HANDOFF.md holds: `--banner-bg` / `--banner-fg` / `--banner-border` are declared only in the base `:root` and are not redefined in either dark-mode block.
+- Fixed two latent issues found while verifying: the impact hero's static placeholders read $400,000 / $10,000 while the defaults compute $40,000 / $1,000 (a 10x flash before JS ran), and `tickerRatePerSecond()` was dead code reading an undefined `c._hoursPerDayCache`.
+- Stood up GitHub Pages. An attempt to enable it from Actions via `actions/configure-pages` with `enablement: true` failed — creating a Pages site needs repo-admin rights that no integration token has ("Resource not accessible by integration") — so Jeff set Source to **GitHub Actions** manually. The workflow then deployed successfully and now republishes on every push.
+- Imported HANDOFF.md, CHANGELOG.md, and TODO.md into the repo so the next session finds them alongside the code.

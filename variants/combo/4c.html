@@ -131,11 +131,16 @@
   .ticker-panel .tnum{font-family:"IBM Plex Mono"; font-weight:700; font-size:clamp(2.2rem,7vw,3.4rem); margin-top:18px; color:#fff;}
   .ticker-panel .telapsed{font-size:.82rem; color:var(--banner-fg-faint); margin-top:6px;}
   .ticker-check{justify-content:center; margin-top:14px;}
-  .cslider{max-width:430px; margin:12px auto 0; text-align:left;}
-  .cslider label{display:block; font-size:.72rem; font-weight:700; letter-spacing:.04em;
-                 text-transform:uppercase; color:var(--banner-accent); margin-bottom:6px;}
-  .cslider .slider-row{gap:14px;}
-  .cslider .slider-val{color:var(--banner-fg); min-width:5ch;}
+  .stepwrap{display:inline-flex; align-items:center; gap:5px; margin-left:10px;}
+  /* the panel is always dark, so ask the browser for dark native stepper arrows
+     regardless of the page theme */
+  .stepwrap input{color-scheme:dark; width:78px; padding:4px 6px; text-align:right;
+    border:1px solid var(--banner-hairline); border-radius:var(--radius-sm);
+    background:var(--banner-fill); color:var(--banner-fg);
+    font-family:"IBM Plex Mono", ui-monospace, monospace; font-variant-numeric:tabular-nums;
+    font-weight:700; font-size:.86rem;}
+  .stepwrap input:focus-visible{outline:2px solid var(--jlt); outline-offset:2px;}
+  .stepwrap .pct{font-size:.82rem; font-weight:700; color:var(--banner-fg-soft);}
   .cum{max-width:430px; margin:10px auto 0; font-size:.74rem; line-height:1.45; color:var(--banner-fg-faint);}
   .ticker-check label{color:var(--banner-fg-soft);}
   .ticker-check input{accent-color:var(--jlt);}
@@ -323,25 +328,21 @@
     <div class="telapsed" id="tickerElapsed">Elapsed 00:00:00</div>
     <div class="check-row ticker-check">
       <input type="checkbox" id="showTwoDown">
-      <label for="showTwoDown">Show the cost if a second system is down</label>
-    </div>
-    <div class="cslider" id="unit2Row" hidden>
-      <label for="impactPct2">Second unit down &mdash; additional impact</label>
-      <div class="slider-row">
-        <input id="impactPct2" type="range" min="1" max="8" step="0.5" value="2.5">
-        <span class="slider-val mono" id="impactPct2Val">2.5%</span>
-      </div>
+      <label for="showTwoDown">Additional cost with two systems down</label>
+      <span class="stepwrap" id="unit2Row" hidden>
+        <input id="impactPct2" type="number" min="1" max="8" step="0.5" value="2.5"
+               aria-label="Additional cost of the second unit, percent of daily output">
+        <span class="pct">%</span>
+      </span>
     </div>
     <div class="check-row ticker-check" id="unit3Check" hidden>
       <input type="checkbox" id="showThreeDown">
-      <label for="showThreeDown">And a third system</label>
-    </div>
-    <div class="cslider" id="unit3Row" hidden>
-      <label for="impactPct3">Third unit down &mdash; additional impact</label>
-      <div class="slider-row">
-        <input id="impactPct3" type="range" min="1" max="8" step="0.5" value="2.5">
-        <span class="slider-val mono" id="impactPct3Val">2.5%</span>
-      </div>
+      <label for="showThreeDown">Additional cost with three systems down</label>
+      <span class="stepwrap" id="unit3Row" hidden>
+        <input id="impactPct3" type="number" min="1" max="8" step="0.5" value="2.5"
+               aria-label="Additional cost of the third unit, percent of daily output">
+        <span class="pct">%</span>
+      </span>
     </div>
     <div class="cum" id="cumNote" hidden></div>
     <div class="ticker-controls">
@@ -538,6 +539,16 @@
     return t;
   }
 
+  // "2.5% for the first + 2.0% for the second" -- the schedule spelled out, so the
+  // Right Now copy and the two-down readout always quote the live percentages
+  // rather than a multiplier
+  function scheduleParts(m, k){
+    var parts = [];
+    for (var i = 0; i < k; i++)
+      parts.push(m[Math.min(i, m.length - 1)].toFixed(1) + "% for the " + ORDINAL[i]);
+    return parts;
+  }
+
   function tierResult(key, c){
     var t = getTier(key);
     var effectiveDowntimeDays = t.repairDays;
@@ -586,12 +597,10 @@
       var m = marginals(c.f.impactPct);
       var combinedPct = cumulativeAt(m, units);
       $("twoDownOut").textContent = fmt$(c.dailyOutput * (combinedPct/100), 0) + " / day";
-      var parts = [];
-      for (var i = 0; i < units; i++)
-        parts.push(m[Math.min(i, m.length-1)].toFixed(1) + "% for the " + ORDINAL[i]);
       document.querySelector("#twoDownBlock .eyebrow").textContent =
-        "If " + WORD[units] + " computers are down at the same time";
-      $("twoDownMath").textContent = parts.join(" + ") + " = " + combinedPct.toFixed(1) + "% combined.";
+        "Additional cost with " + WORD[units] + " systems down";
+      $("twoDownMath").textContent = scheduleParts(m, units).join(" + ")
+        + " = " + combinedPct.toFixed(1) + "% combined.";
     }
 
     var results = TIERS.map(function(t){ return tierResult(t.key, c); });
@@ -673,9 +682,13 @@
       var units = downUnits();
       effectiveDailyImpact = c.dailyOutput * (cumulativeAt(marginals(c.f.impactPct), units)/100);
     }
+    var km = marginals(c.f.impactPct), ku = downUnits();
     $("tickerLine").textContent = twoDown
-      ? "While " + WORD[downUnits()] + " computers sit unavailable at once, this is what leaks out of the operation."
-      : "While one computer sits unavailable, this is what leaks out of the operation.";
+      ? "While " + WORD[ku] + " computers sit unavailable at once, this is what leaks out of "
+        + "the operation \u2014 " + scheduleParts(km, ku).join(" + ") + ", "
+        + cumulativeAt(km, ku).toFixed(1) + "% of daily output combined."
+      : "While one computer sits unavailable, this is what leaks out of the operation \u2014 "
+        + c.f.impactPct.toFixed(1) + "% of daily output.";
     var perSecondReal = effectiveDailyImpact / (c.f.hoursPerDay*3600);
     var speed = state.fast ? 360 : 1;
     var shown = perSecondReal * state.simSeconds * speed;
@@ -705,12 +718,11 @@
   // A revealed slider starts at whatever the one before it is currently set to,
   // so opening it changes nothing until it is deliberately moved. Its own step
   // is 0.5 with a floor of 1.0, so snap the inherited value onto that grid.
+  function snap(v){ return Math.min(8, Math.max(1, Math.round(v * 2) / 2)); }
+
   function inherit(fromId, toId, touchedKey){
     if (state[touchedKey]) return;
-    var v = num(fromId, 2.5);
-    v = Math.min(8, Math.max(1, Math.round(v * 2) / 2));
-    $(toId).value = v;
-    $(toId + "Val").textContent = v.toFixed(1) + "%";
+    $(toId).value = snap(num(fromId, 2.5)).toFixed(1);
   }
 
   function syncConcurrency(){
@@ -750,9 +762,14 @@
 
   function wire(){
     ["impactPct2", "impactPct3"].forEach(function(id){
-      $(id).addEventListener("input", function(){
+      var el = $(id);
+      el.addEventListener("input", function(){
         state[id === "impactPct2" ? "touched2" : "touched3"] = true;
-        $(id + "Val").textContent = parseFloat(this.value).toFixed(1) + "%";
+        syncConcurrency(); renderAll(); renderTicker();
+      });
+      // the arrows already move in 0.5 steps; this catches a typed-in value
+      el.addEventListener("change", function(){
+        this.value = snap(parseFloat(this.value) || 1).toFixed(1);
         syncConcurrency(); renderAll(); renderTicker();
       });
     });

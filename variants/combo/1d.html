@@ -171,19 +171,30 @@
   .tbtn:hover{border-color:var(--jlt); background:rgba(254,80,2,0.20); color:#fff;}
   .tbtn.active{background:var(--jlt); border-color:var(--jlt); color:#fff;}
 
-  .tiles{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:var(--radius); overflow:hidden;}
+  .tiles{display:grid; grid-template-columns:repeat(4,1fr); grid-template-rows:auto auto 1fr auto auto;
+    gap:1px; background:var(--line); border:1px solid var(--line); border-radius:var(--radius); overflow:hidden;}
   @media (max-width:820px){ .tiles{grid-template-columns:repeat(2,1fr);} }
   @media (max-width:480px){ .tiles{grid-template-columns:1fr;} }
-  .tile{background:var(--surface); padding:20px 18px; border-top:4px solid var(--line-strong); position:relative;}
+  /* Every tile shares one set of rows so the tag, name, spec, amount and delta
+     all sit on common baselines, however differently the spec text wraps. The
+     flex rules are the fallback where subgrid is unsupported: the spec absorbs
+     the slack, which lines the amounts up from the bottom instead. */
+  .tile{background:var(--surface); padding:20px 18px; border-top:4px solid var(--line-strong); position:relative;
+    display:flex; flex-direction:column;}
+  .tile .spec{flex:1 1 auto;}
+  @supports (grid-template-rows: subgrid){
+    .tile{display:grid; grid-template-rows:subgrid; grid-row:span 5; row-gap:0;}
+    .tile .spec{flex:none;}
+  }
   .tile.win{border-top-color:var(--jlt); background:var(--jlt-wash);}
   .tile .tag{font-size:.68rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--muted);}
   .tile.win .tag{color:var(--jlt-strong);}
   .tile .name{font-family:"Archivo"; font-weight:800; font-size:1rem; margin-top:2px;}
-  .tile .spec{font-size:.76rem; color:var(--ink-soft); margin-top:8px; line-height:1.4; min-height:2.8em;}
+  .tile .spec{font-size:.76rem; color:var(--ink-soft); margin-top:8px; line-height:1.4;}
   .tile.win .spec{color:var(--jlt-strong);}
   .tile .amt{font-family:"IBM Plex Mono"; font-weight:700; font-size:clamp(1.25rem,2.4vw,1.55rem); margin-top:14px;}
   .tile.win .amt{color:var(--jlt-strong);}
-  .tile .delta{font-size:.78rem; color:var(--ink-soft); margin-top:6px; min-height:2.6em;}
+  .tile .delta{font-size:.78rem; color:var(--ink-soft); margin-top:6px;}
   .tile.win .delta{color:var(--jlt-strong); font-weight:700;}
 
   .verdict{background:var(--banner-bg); color:var(--banner-fg); padding:clamp(24px,4vw,36px); margin:36px 0; text-align:center; border:1px solid var(--banner-border); border-radius:var(--radius);}

@@ -99,32 +99,7 @@ SCHEMES = [
 .tile:not(.win){border-top-color:#2b7bb9;}
 '''),
 
- ('e-pastel', 'Pastel Hero',
-  "The soft cream-to-mint wash from jltmobile.com's own hero. Friendliest.", dict(
-   paper='#fbfbf7', surface='#ffffff', surface_2='#f1f6f2',
-   ink='#0f172a', ink_soft='#33333a', muted='#5f5f5f',
-   line='rgba(15,23,42,0.12)', line_strong='rgba(15,23,42,0.24)',
-   jlt='#fe5002', jlt_strong='#c43c00', jlt_wash='rgba(254,80,2,0.09)',
-   banner_bg='#0f172a', banner_fg='#eef1f6', banner_border='rgba(254,80,2,0.28)',
-   banner_accent='#f39200', banner_fg_soft='rgba(238,241,246,0.80)',
-   banner_fg_faint='rgba(238,241,246,0.64)', banner_hairline='rgba(238,241,246,0.28)',
-   banner_fill='rgba(238,241,246,0.10)',
-   shadow='0 1px 0 rgba(15,23,42,0.03), 0 10px 30px -18px rgba(15,23,42,0.28)',
-   scheme='light'), '''
-/* the site's hero wash, full-bleed behind the whole hero band as on jltmobile.com */
-body{
-  background:
-    linear-gradient(100deg,#faf3d6 0%,#f1f4e4 42%,#dfeee8 100%) no-repeat 0 0 / 100% 660px,
-    var(--paper);
-}
-@media (max-width:999px){
-  body{background:
-    linear-gradient(160deg,#faf3d6 0%,#f1f4e4 45%,#dfeee8 100%) no-repeat 0 0 / 100% 560px,
-    var(--paper);}
-}
-.hero .callout{background:rgba(255,255,255,.74); border-color:rgba(15,23,42,.10);}
-'''),
- ('f-jltbanner', 'JLT Banner',
+ ('e-jltbanner', 'JLT Banner',
   "Built from the /rugged-computers hero banner: its cream-to-mint wash, its "
   "warm off-white, its navy, and its CTA gradient on the buttons.", dict(
    paper='#f7f5ee', surface='#ffffff', surface_2='#e2ecdc',

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Pastel Hero - Bottom-Line Impact Calculator</title>
+<title>JLT Banner - Bottom-Line Impact Calculator</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap">
 
@@ -201,14 +201,14 @@
 :root,
 :root:not([data-theme="light"]),
 :root[data-theme="dark"]{
-  --paper:#fbfbf7;
+  --paper:#f7f5ee;
   --surface:#ffffff;
-  --surface-2:#f1f6f2;
+  --surface-2:#e2ecdc;
   --ink:#0f172a;
   --ink-soft:#33333a;
-  --muted:#5f5f5f;
+  --muted:#585858;
   --line:rgba(15,23,42,0.12);
-  --line-strong:rgba(15,23,42,0.24);
+  --line-strong:rgba(15,23,42,0.22);
   --jlt:#fe5002;
   --jlt-strong:#c43c00;
   --jlt-wash:rgba(254,80,2,0.09);
@@ -220,22 +220,36 @@
   --banner-fg-faint:rgba(238,241,246,0.64);
   --banner-hairline:rgba(238,241,246,0.28);
   --banner-fill:rgba(238,241,246,0.10);
-  --shadow:0 1px 0 rgba(15,23,42,0.03), 0 10px 30px -18px rgba(15,23,42,0.28);
+  --shadow:0 1px 0 rgba(15,23,42,0.04), 0 10px 30px -18px rgba(15,23,42,0.30);
   color-scheme:light;
 }
 
-/* the site's hero wash, full-bleed behind the whole hero band as on jltmobile.com */
+/* The hero banner itself, full-bleed. Stops read off the /rugged-computers
+   header: warm cream on the left through a pale neutral into soft mint. */
 body{
   background:
-    linear-gradient(100deg,#faf3d6 0%,#f1f4e4 42%,#dfeee8 100%) no-repeat 0 0 / 100% 660px,
+    linear-gradient(105deg,#f6efcf 0%,#eff0d4 28%,#e2ecdc 58%,#c9e4d7 100%)
+      no-repeat 0 0 / 100% 720px,
     var(--paper);
 }
 @media (max-width:999px){
   body{background:
-    linear-gradient(160deg,#faf3d6 0%,#f1f4e4 45%,#dfeee8 100%) no-repeat 0 0 / 100% 560px,
+    linear-gradient(165deg,#f6efcf 0%,#eff0d4 30%,#e2ecdc 62%,#c9e4d7 100%)
+      no-repeat 0 0 / 100% 600px,
     var(--paper);}
 }
-.hero .callout{background:rgba(255,255,255,.74); border-color:rgba(15,23,42,.10);}
+.hero .callout{background:rgba(255,255,255,.78); border-color:rgba(15,23,42,.10);}
+.tool-tag{background:rgba(255,255,255,.72);}
+
+/* JLT's CTA gradient, exact stops, on the selected controls. Text is navy, not
+   white: white measures 2.35:1 on the #f39200 end, which fails WCAG even at
+   large sizes, while navy clears 5.67:1 at the orange end and 7.96:1 at the
+   amber. The gradient itself is unchanged. */
+.chip.active,.tbtn.active{
+  background:linear-gradient(48deg,#fe5000 0%,#f39200 85%);
+  border-color:#fe5002; color:#0b1220;
+}
+.tbtn.active:hover{color:#0b1220;}
 
 /* ---- colour switcher (preview only, not part of any scheme) ---- */
 body{padding-bottom:64px;}
@@ -684,6 +698,6 @@ body{padding-bottom:64px;}
 })();
 </script>
 
-<nav class="cswitch"><b>Colour</b><a href="a-jlt-light.html">JLT Cool - Light</a><a href="b-jlt-dark.html">JLT Cool - Dark</a><a href="c-signal.html">Signal</a><a href="d-steel.html">Steel Blue</a><a href="e-pastel.html" aria-current="page">Pastel Hero</a><a href="f-jltbanner.html">JLT Banner</a><a href="../../index.html">Back to main</a></nav>
+<nav class="cswitch"><b>Colour</b><a href="a-jlt-light.html">JLT Cool - Light</a><a href="b-jlt-dark.html">JLT Cool - Dark</a><a href="c-signal.html">Signal</a><a href="d-steel.html">Steel Blue</a><a href="e-jltbanner.html" aria-current="page">JLT Banner</a><a href="../../index.html">Back to main</a></nav>
 </body>
 </html>

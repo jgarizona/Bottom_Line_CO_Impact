@@ -408,6 +408,11 @@
         <p class="assump-note" style="margin-bottom:10px;">JLT Rugged's two figures are JLT's own commitments<span class="badge validated">JLT SLA</span>: a 2.5% annual failure rate from JLT's internal TCO model, and a 10-day restore time (7 business days under contract + ~3 days average shipping). The other three platforms have no equivalent published SLA<span class="badge">estimate</span> &mdash; their numbers are provisional placeholders until confirmed against a specific competitor's actual commitments, and shouldn't be shown to a customer as verified fact.</p>
         <div class="misc-grid">
           <div class="field">
+            <label for="concurrencyMult">Cost of a concurrent failure</label>
+            <div class="num-input"><input id="concurrencyMult" type="number" min="1" step="0.5" value="2"><span class="affix">&times;</span></div>
+            <span class="hint">When one unit is already down, the next failure is priced at this multiple &mdash; there is less slack left to absorb it. Applied to the expected overlap for each platform, so platforms that fail often and take longer to fix are hit hardest.</span>
+          </div>
+          <div class="field">
             <label for="hoursPerDay">Working hours per day</label>
             <div class="num-input"><input id="hoursPerDay" type="number" min="1" step="0.5" value="8"><span class="affix">hrs</span></div>
             <span class="hint">Used only to pace the live ticker below the daily figure.</span>
@@ -475,14 +480,27 @@
     return { f:f, dailyOutput:dailyOutput, dailyImpact:dailyImpact };
   }
 
+  function concurrencyMult(){ return Math.max(1, num("concurrencyMult", 2)); }
+
   function tierResult(key, c){
     var t = getTier(key);
     var effectiveDowntimeDays = t.repairDays;
     var failuresPerYear = c.f.fleetSize * (t.failureRate/100);
     var annualExposureDays = failuresPerYear * effectiveDowntimeDays;
-    var annualImpact = annualExposureDays * c.dailyImpact;
+    // Some of those unit-days overlap: a unit goes down while another is already
+    // out. Those overlapping days hurt more, so they are priced at the
+    // concurrency multiple. How many there are is not a guess -- for a given
+    // failure rate and repair time the expected overlap is
+    // lambda - (1 - e^-lambda) unit-days per working day, where lambda is the
+    // average number of units down at any moment. A platform that fails often
+    // and takes long to fix overlaps far more, so this widens the gap.
+    var lambda = c.f.workingDays > 0 ? annualExposureDays / c.f.workingDays : 0;
+    var overlapDays = Math.max(0, (lambda - (1 - Math.exp(-lambda))) * c.f.workingDays);
+    var pricedDays = annualExposureDays + overlapDays * (concurrencyMult() - 1);
+    var annualImpact = pricedDays * c.dailyImpact;
     var fiveYear = annualImpact * 5;
-    return { key:key, t:t, effectiveDowntimeDays:effectiveDowntimeDays, failuresPerYear:failuresPerYear, annualImpact:annualImpact, fiveYear:fiveYear };
+    return { key:key, t:t, effectiveDowntimeDays:effectiveDowntimeDays, failuresPerYear:failuresPerYear,
+             overlapDays:overlapDays, annualImpact:annualImpact, fiveYear:fiveYear };
   }
 
   function buildTilesSkeleton(){
@@ -505,11 +523,11 @@
     var twoDownChecked = $("showTwoDown").checked;
     $("twoDownBlock").hidden = !twoDownChecked;
     if (twoDownChecked){
-      var secondUnitPct = c.f.impactPct * 2;
+      var secondUnitPct = c.f.impactPct * concurrencyMult();
       var combinedPct = c.f.impactPct + secondUnitPct;
       var twoDownDaily = c.dailyOutput * (combinedPct/100);
       $("twoDownOut").textContent = fmt$(twoDownDaily,0) + " / day";
-      $("twoDownMath").textContent = c.f.impactPct.toFixed(1)+"% for the first unit + "+secondUnitPct.toFixed(1)+"% for the second (2× the rate, as an illustrative estimate) = "+combinedPct.toFixed(1)+"% combined.";
+      $("twoDownMath").textContent = c.f.impactPct.toFixed(1)+"% for the first unit + "+secondUnitPct.toFixed(1)+"% for the second ("+concurrencyMult()+"× the rate) = "+combinedPct.toFixed(1)+"% combined.";
     }
 
     var results = TIERS.map(function(t){ return tierResult(t.key, c); });
@@ -567,7 +585,12 @@
     }
     var years = unitPrice / r.annualImpact;
     var durationText;
-    if (years < 1){
+    if (years * 12 < 1){
+      // at real warehouse output one unit's price is covered in days, not months
+      var wdays = years * (state._c ? state._c.f.workingDays : 250);
+      durationText = (wdays < 10 ? wdays.toFixed(1) : String(Math.round(wdays)))
+                   + (Math.abs(wdays - 1) < 0.05 ? " working day" : " working days");
+    } else if (years < 1){
       var months = years * 12;
       durationText = months.toFixed(1) + (Math.abs(months - 1) < 0.05 ? " month" : " months");
     } else {
@@ -583,11 +606,11 @@
     var twoDown = $("showTwoDown").checked;
     var effectiveDailyImpact = c.dailyImpact;
     if (twoDown){
-      var combinedPct = c.f.impactPct + (c.f.impactPct*2);
+      var combinedPct = c.f.impactPct + (c.f.impactPct*concurrencyMult());
       effectiveDailyImpact = c.dailyOutput * (combinedPct/100);
     }
     $("tickerLine").textContent = twoDown
-      ? "While two computers sit unavailable at once, this is what leaks out of the operation (first unit at the normal rate, second at 2×)."
+      ? "While two computers sit unavailable at once, this is what leaks out of the operation (first unit at the normal rate, second at "+concurrencyMult()+"×)."
       : "While one computer sits unavailable, this is what leaks out of the operation.";
     var perSecondReal = effectiveDailyImpact / (c.f.hoursPerDay*3600);
     var speed = state.fast ? 360 : 1;

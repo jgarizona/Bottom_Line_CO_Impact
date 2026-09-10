@@ -27,6 +27,7 @@
     --banner-fg:#eef1f6;
     --banner-border:rgba(254,80,2,0.30);
     --banner-accent:#f39200;
+    --banner-scheme:dark;
     --banner-fg-soft:rgba(238,241,246,0.80);
     --banner-fg-faint:rgba(238,241,246,0.64);
     --banner-hairline:rgba(238,241,246,0.28);
@@ -134,13 +135,34 @@
   .stepwrap{display:inline-flex; align-items:center; gap:5px; margin-left:10px;}
   /* the panel is always dark, so ask the browser for dark native stepper arrows
      regardless of the page theme */
-  .stepwrap input{color-scheme:dark; width:78px; padding:4px 6px; text-align:right;
+  .stepwrap input{color-scheme:var(--banner-scheme); width:78px; padding:4px 6px; text-align:right;
     border:1px solid var(--banner-hairline); border-radius:var(--radius-sm);
     background:var(--banner-fill); color:var(--banner-fg);
     font-family:"IBM Plex Mono", ui-monospace, monospace; font-variant-numeric:tabular-nums;
     font-weight:700; font-size:.86rem;}
   .stepwrap input:focus-visible{outline:2px solid var(--jlt); outline-offset:2px;}
   .stepwrap .pct{font-size:.82rem; font-weight:700; color:var(--banner-fg-soft);}
+  .stepwrap.light input{color-scheme:light; border-color:var(--line-strong);
+    background:var(--paper); color:var(--ink);}
+  .stepwrap.light .pct{color:var(--muted);}
+
+  /* the impact control, moved into the hero card beside the number it drives */
+  .impact-control{max-width:460px; margin:22px auto 0; padding-top:18px;
+    border-top:1px solid var(--line); text-align:left;}
+  .impact-control > label{display:block; font-size:.74rem; font-weight:700;
+    letter-spacing:.04em; color:var(--ink-soft); margin-bottom:8px;}
+  .impact-control .chip-row{justify-content:flex-start;}
+
+  /* the live ticker, mirrored here so it reads without scrolling */
+  .hero-ticker{margin:22px auto 0; max-width:460px;}
+  .hero-ticker-label{font-family:"Archivo", system-ui, sans-serif; font-weight:800;
+    font-size:.95rem; color:var(--ink); margin-bottom:8px;}
+  .hero-ticker-num{background:var(--banner-bg); color:var(--banner-fg);
+    border-radius:var(--radius-sm); padding:14px 18px;
+    font-weight:700; font-size:clamp(1.7rem,4vw,2.5rem); line-height:1.1;}
+
+  .adjust-note{margin:0 0 12px; font-family:"Archivo", system-ui, sans-serif;
+    font-weight:800; font-size:.98rem; color:var(--jlt-strong); text-wrap:balance;}
   .cum{max-width:430px; margin:10px auto 0; font-size:.74rem; line-height:1.45; color:var(--banner-fg-faint);}
   .ticker-check label{color:var(--banner-fg-soft);}
   .ticker-check input{accent-color:var(--jlt);}
@@ -254,11 +276,13 @@
   </section>
 
   <section class="section">
+    <p class="adjust-note">Adjust the number to see what the wrong computers do to your bottom line</p>
     <div class="panel">
       <div class="field-grid">
         <div class="field">
           <label for="annualOutput">Annual warehouse output</label>
-          <div class="num-input"><span class="affix">$</span><input id="annualOutput" type="number" min="0" step="100000" value="100000000"></div>
+          <div class="num-input"><span class="affix">$</span><input id="annualOutput" type="text"
+            inputmode="numeric" autocomplete="off" value="50,000,000"></div>
         </div>
         <div class="field">
           <label for="workingDays">Working days per year</label>
@@ -266,29 +290,41 @@
         </div>
         <div class="field">
           <label for="fleetSize">Units / Vehicles</label>
-          <div class="num-input"><input id="fleetSize" type="number" min="1" step="1" value="25"><span class="affix">units</span></div>
-        </div>
-        <div class="field">
-          <label for="impactPct">Business impact, one computer down</label>
-          <div class="slider-row">
-            <input id="impactPct" type="range" min="0.5" max="8" step="0.1" value="2.5">
-            <span class="slider-val mono" id="impactPctVal">2.5%</span>
-          </div>
-          <div class="chip-row" id="chipRow">
-            <button type="button" class="chip" data-val="1">1%</button>
-            <button type="button" class="chip active" data-val="2.5">2.5%</button>
-            <button type="button" class="chip" data-val="5">5%</button>
-          </div>
+          <div class="num-input"><input id="fleetSize" type="number" min="1" step="1" value="10"><span class="affix">units</span></div>
         </div>
       </div>
     </div>
   </section>
 
   <section class="impact-hero">
-    <div class="sub">Daily warehouse output: <span class="mono" id="dailyOutputOut">$400,000</span> / day</div>
+    <div class="sub">Daily warehouse output: <span class="mono" id="dailyOutputOut">$200,000</span> / day</div>
     <div class="eyebrow">Daily bottom-line impact, one computer down</div>
-    <div class="bignum mono" id="dailyImpactOut">$10,000</div>
+    <div class="bignum mono" id="dailyImpactOut">$5,000</div>
     <div class="sub small">This is the number that matters &mdash; everything below is how often you pay it.</div>
+
+    <div class="impact-control">
+      <label for="impactPct">Business impact, one computer down</label>
+      <div class="slider-row">
+        <input id="impactPct" type="range" min="0.5" max="8" step="0.1" value="2.5">
+        <span class="slider-val mono" id="impactPctVal">2.5%</span>
+        <span class="stepwrap light">
+          <input id="impactPctNum" type="number" min="0.5" max="8" step="0.5" value="2.5"
+                 aria-label="Business impact of one computer down, percent of daily output">
+          <span class="pct">%</span>
+        </span>
+      </div>
+      <div class="chip-row" id="chipRow">
+        <button type="button" class="chip" data-val="1">1%</button>
+        <button type="button" class="chip active" data-val="2.5">2.5%</button>
+        <button type="button" class="chip" data-val="5">5%</button>
+      </div>
+    </div>
+
+    <div class="hero-ticker">
+      <div class="hero-ticker-label">Money Leaving Your Bottom Line</div>
+      <div class="hero-ticker-num mono" id="tickerNumTop">$0.00</div>
+    </div>
+
     <div class="two-down" id="twoDownBlock" hidden>
       <div class="eyebrow">If two computers are down at the same time</div>
       <div class="two-down-num mono" id="twoDownOut">$0</div>
@@ -464,7 +500,12 @@
   function $(id){ return document.getElementById(id); }
   function num(id, fallback){
     var el = $(id); if (!el) return fallback;
-    var v = parseFloat(el.value); return isNaN(v) ? fallback : v;
+    // annual output is a text field so it can carry thousands separators
+    var v = parseFloat(String(el.value).replace(/,/g, ""));
+    return isNaN(v) ? fallback : v;
+  }
+  function groupThousands(digits){
+    return digits.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
   function fmt$(n, decimals){
     decimals = decimals || 0;
@@ -667,7 +708,9 @@
     var perSecondReal = effectiveDailyImpact / (c.f.hoursPerDay*3600);
     var speed = state.fast ? 360 : 1;
     var shown = perSecondReal * state.simSeconds * speed;
-    $("tickerNum").textContent = fmt$(shown, 2);
+    var shownText = fmt$(shown, 2);
+    $("tickerNum").textContent = shownText;
+    $("tickerNumTop").textContent = shownText;   // the copy up in the hero card
     var simDisplay = state.simSeconds * speed;
     var h = Math.floor(simDisplay/3600), m = Math.floor((simDisplay%3600)/60), s = Math.floor(simDisplay%60);
     function pad(n){ return (n<10?"0":"")+n; }
@@ -735,6 +778,16 @@
     }
   }
 
+  // slider, stepper and chips are three ways of setting the same number
+  function setImpact(value, from){
+    var v = Math.min(8, Math.max(0.5, parseFloat(value) || 0.5));
+    if (from !== "impactPct") $("impactPct").value = v;
+    if (from !== "impactPctNum") $("impactPctNum").value = v.toFixed(1);
+    $("impactPctVal").textContent = v.toFixed(1) + "%";
+    if (from !== "chip")
+      document.querySelectorAll("#chipRow .chip").forEach(function(c){ c.classList.remove("active"); });
+  }
+
   function wire(){
     ["impactPct2", "impactPct3"].forEach(function(id){
       var el = $(id);
@@ -754,21 +807,30 @@
       });
     });
 
-    document.querySelectorAll(".field-grid input, .misc-grid input, .assump-table input").forEach(function(el){
-      el.addEventListener("input", function(){
-        if (el.id === "impactPct"){
-          $("impactPctVal").textContent = parseFloat(el.value).toFixed(1)+"%";
-          document.querySelectorAll("#chipRow .chip").forEach(function(c){ c.classList.remove("active"); });
-        }
-        renderAll(); renderTicker();
+    document.querySelectorAll(".field-grid input, .impact-control input, .misc-grid input, .assump-table input")
+      .forEach(function(el){
+        el.addEventListener("input", function(){
+          if (el.id === "impactPct" || el.id === "impactPctNum") setImpact(el.value, el.id);
+          renderAll(); renderTicker();
+        });
       });
+
+    // annual output carries commas as you type, with the caret kept in place
+    $("annualOutput").addEventListener("input", function(){
+      var caret = this.selectionStart;
+      var digitsBefore = this.value.slice(0, caret).replace(/\D/g, "").length;
+      var out = groupThousands(this.value.replace(/\D/g, "").slice(0, 15));
+      this.value = out;
+      var pos = 0, seen = 0;
+      while (pos < out.length && seen < digitsBefore){ if (/\d/.test(out[pos])) seen++; pos++; }
+      try { this.setSelectionRange(pos, pos); } catch(e){}
+      renderAll(); renderTicker();
     });
     document.querySelectorAll("#chipRow .chip").forEach(function(chip){
       chip.addEventListener("click", function(){
         document.querySelectorAll("#chipRow .chip").forEach(function(c){ c.classList.remove("active"); });
+        setImpact(chip.getAttribute("data-val"), "chip");
         chip.classList.add("active");
-        $("impactPct").value = chip.getAttribute("data-val");
-        $("impactPctVal").textContent = parseFloat(chip.getAttribute("data-val")).toFixed(1)+"%";
         renderAll(); renderTicker();
       });
     });

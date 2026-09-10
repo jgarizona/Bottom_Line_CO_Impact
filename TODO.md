@@ -7,6 +7,13 @@
 - [x] Process note confirmed in practice: a session's GitHub push access is fixed at session start from the repo picker. This session had `jgarizona/Bottom_Line_CO_Impact` selected up front and pushed with no 403.
 
 ## Open — needs Jeff
+- [ ] **Pick a layout and colour** at https://jgarizona.github.io/Bottom_Line_CO_Impact/choose.html
+      and send the code (e.g. `2E`); it then becomes the main page.
+- [ ] **Decide the impact slider default.** It drives everything and is the single
+      biggest lever. At 2.5% with the current defaults Consumer Grade reaches
+      $787k over five years; 4% (one unit's proportional share of a 10-unit
+      fleet is 10%, so 4% is conservative) roughly doubles it. Concurrency
+      settings move it far less.
 - [ ] **Set `main` as the default branch** (Settings → Branches), then delete `claude/hopeful-albattani-owrfne`. `main` is pushed and identical; the deploy workflow already triggers on both, so the switch won't break Pages. Requires admin, can't be done via API.
 - [ ] Get the boss's review/approval — either the Pages link above or the private artifact link (https://claude.ai/code/artifact/f4601223-ab03-4629-a84f-e49e40d2e555).
 - [ ] Confirm the named example platforms in "The Hidden Cost of Hot and Cold" (Apple, Dell Latitude Rugged / Panasonic Toughbook, Honeywell) are okay to name explicitly for this audience, or should be genericized before it goes external.

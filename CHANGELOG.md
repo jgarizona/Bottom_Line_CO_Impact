@@ -31,3 +31,52 @@
 - Fixed two latent issues found while verifying: the impact hero's static placeholders read $400,000 / $10,000 while the defaults compute $40,000 / $1,000 (a 10x flash before JS ran), and `tickerRatePerSecond()` was dead code reading an undefined `c._hoursPerDayCache`.
 - Stood up GitHub Pages. An attempt to enable it from Actions via `actions/configure-pages` with `enablement: true` failed — creating a Pages site needs repo-admin rights that no integration token has ("Resource not accessible by integration") — so Jeff set Source to **GitHub Actions** manually. The workflow then deployed successfully and now republishes on every push.
 - Imported HANDOFF.md, CHANGELOG.md, and TODO.md into the repo so the next session finds them alongside the code.
+
+## Model, defaults and the Right Now panel
+- Defaults set to $50,000,000 output / 250 days / **10 units**, matching the hero
+  callout's own example ("10 forklifts. 1 computer fails. Output doesn't fall
+  10%") so the opening screen and the opening sentence agree. Fleet had briefly
+  been 25, which contradicted both the "10 forklifts" line and the 10% figure.
+- Annual output is a text field carrying thousands separators (50,000,000), with
+  the caret held in place as you type. Every reader strips commas, so the value
+  is still a plain number to the maths.
+- Relabelled "Number of vehicle computers" to "Units / Vehicles".
+- Concurrency reworked twice. First a single 2x multiplier, then replaced by
+  per-unit controls: ticking "Additional cost with two systems down" reveals a
+  0.5-step stepper (floor 1.0) for that unit, and a checkbox for a third. Three
+  is the ceiling. Each revealed control inherits the value above it, so opening
+  one changes nothing until it is moved.
+- The annual maths generalise rather than change: expected daily loss is the
+  schedule averaged over the distribution of concurrent failures implied by each
+  platform's failure rate and repair time. A flat schedule reduces exactly to the
+  original annualExposureDays x dailyImpact, so the untouched page still computes
+  the spec's formula chain.
+- Added a note stating how the current schedule compares with that flat baseline
+  and which way the totals move, because a step-down schedule lowers the totals
+  and looked like a bug.
+- Breakeven shows working days under a month ("1.1 working days") instead of
+  "0.1 months".
+- Right Now copy quotes the live percentages rather than a multiplier.
+- The live ticker is mirrored into the impact hero under "Money Leaving Your
+  Bottom Line", so it reads without scrolling; both copies show the same value.
+- The business-impact control moved into the impact hero beside the number it
+  drives, and gained a stepper alongside the slider and chips. All three are
+  views of one value.
+- Added "Adjust the number to see what the wrong computers do to your bottom
+  line" above the inputs.
+
+## Brand and presentation
+- Palette taken from jltmobile.com: #fe5002 accent, #0f172a navy, #33333a body,
+  #f2f2f2 page, #757575 muted, #f39200 amber. Neutrals moved from warm brown to
+  these cool values; corners rounded.
+- Fixed invisible ticker buttons: .tbtn used --paper, which flips with the theme,
+  inside a panel that is always dark.
+- Tokenised the last hardcoded banner colours, and added --banner-scheme so a
+  light-panel scheme gets light native stepper arrows (Signal was showing dark
+  arrows on orange).
+- Five layouts under /variants/, five colour schemes under /variants/colors/,
+  and all 25 combinations under /variants/combo/ behind /choose.html, which
+  previews a pairing live and names it with a code like 2E.
+- Three generators in tools/ derive every one of those pages from index.html, so
+  copy, markup and JS have a single source of truth.
+

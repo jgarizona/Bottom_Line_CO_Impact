@@ -16,8 +16,13 @@ Built from Jeff's own authoritative spec, `JLT_Bottom_Line_Calculator_Project.md
 ## Page structure (top to bottom)
 1. Topbar — JLT wordmark + "Bottom-Line Impact" tag
 2. Hero — headline + lede ("The core business of your warehouse is moving product out and to your bottom line...") + a 2-3% workload-redistribution callout
-3. Inputs panel — annual output, working days, fleet size, impact % (slider + chips)
-4. Impact hero — daily output / daily bottom-line impact, plus a conditional "two systems down" block
+3. Impact hero — daily output / daily bottom-line impact, the business-impact control
+   (slider + stepper + chips), the mirrored live ticker, and a conditional "two
+   systems down" block. **The number comes before the fields that drive it**: on a
+   phone the $5,000 card reads first, then "Adjust the number to see what the wrong
+   computers do to your bottom line", then the inputs it refers to.
+4. Inputs panel — annual output, working days, fleet size (the impact % lives in the
+   card above)
 5. Live ticker — play/pause/reset/fast-forward, with a "show the cost if two systems are down" checkbox
 6. Platform comparison tiles — Consumer Grade, Semi-Rugged, Rugged, JLT Rugged, each with a spec caption distinguishing JLT's validated SLA data from competitors' estimates
 7. Verdict banner
@@ -56,6 +61,12 @@ all three or the previews go stale.
    `--banner-fill`, and `--banner-scheme` for native control rendering.
 2. **`.wrap` appears twice** — once in the topbar, once around the content. Layout
    CSS must be scoped to `body > .wrap`, or `nth-child` rules also hit the topbar.
+   Related: four of the five layouts place these nine children by `nth-child`, so
+   **reordering them silently scrambles those layouts**. When the impact card moved
+   above the inputs panel, layouts 1 and 2 needed their indices swapped to match;
+   3 was unaffected (its step range covers the same set), and 4 and 5 simply
+   re-paired. Always re-check all five at desktop width after a DOM move, and look
+   for overlapping blocks, not just for the page still loading.
 3. **Flex rows without `flex-wrap`.** `display:flex` defaults to `nowrap`, so a row
    that fits a laptop pushes its last child off a phone. This bit `.chip-row`
    (the four platform pills in the breakeven foldout became unreachable at

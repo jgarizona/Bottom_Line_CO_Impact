@@ -127,6 +127,25 @@
   `claude/hopeful-albattani-owrfne`; promoting to the live site is a fast-forward
   of `main`.
 
+## Page order
+- The impact-hero card moved above the inputs panel, so the reading order is now
+  the $5,000 number, then "Adjust the number to see what the wrong computers do to
+  your bottom line", then the fields. On a phone the old order buried the headline
+  figure below three input boxes; now it is the first thing on screen and the
+  invitation to adjust sits directly above the controls it refers to.
+- Four of the five layouts position the nine `body > .wrap` children by
+  `nth-child`, so the move needed their selectors checked. Layout 1 (Sidebar) and
+  2 (Hero Split) had their indices swapped -- both look identical to before on
+  desktop, the inputs panel still being the sticky rail in 1 and the impact card
+  still sitting beside the headline in 2. Layout 3 (Stepped) needed nothing: its
+  numbered range covers the same five blocks, so the steps simply now count the
+  number first. Layouts 4 (Compact) and 5 (Card Deck) re-paired -- 4 mirrors to
+  impact-left/inputs-right, and in 5 the impact card takes the full width with the
+  inputs panel beside the ticker.
+- Verified on all six pages (base plus one of each layout): the card renders above
+  the note above the fields at 390px, all nine children are present, and no two
+  blocks overlap at 1400px.
+
 ## Brand and presentation
 - Palette taken from jltmobile.com: #fe5002 accent, #0f172a navy, #33333a body,
   #f2f2f2 page, #757575 muted, #f39200 amber. Neutrals moved from warm brown to

@@ -324,12 +324,15 @@
 /* ---- 1. Sidebar Console ---- */
 @media (min-width:960px){
   body>.wrap{display:grid; grid-template-columns:330px minmax(0,1fr); gap:0 34px; align-items:start;}
+  /* child 2 is the impact card and child 3 the inputs panel: the number comes
+     before the fields that drive it. The rail is child 3. */
   body>.wrap>*:nth-child(1){grid-column:1 / -1;}
-  body>.wrap>*:nth-child(2){grid-column:1; grid-row:2 / span 7; position:sticky; top:24px; margin:0;}
-  body>.wrap>*:nth-child(2) .field-grid{grid-template-columns:1fr; gap:16px;}
-  body>.wrap>*:nth-child(2) .panel{padding:20px;}
-  body>.wrap>*:nth-child(n+3){grid-column:2; margin-top:0; margin-bottom:22px;}
-  body>.wrap>*:nth-child(3){margin-top:0;}
+  body>.wrap>*:nth-child(3){grid-column:1; grid-row:2 / span 7; position:sticky; top:24px; margin:0;}
+  body>.wrap>*:nth-child(3) .field-grid{grid-template-columns:1fr; gap:16px;}
+  body>.wrap>*:nth-child(3) .panel{padding:20px;}
+  body>.wrap>*:nth-child(2),
+  body>.wrap>*:nth-child(n+4){grid-column:2; margin-top:0; margin-bottom:22px;}
+  body>.wrap>*:nth-child(2){margin-top:0;}
   .hero h1{max-width:26ch;}
   .hero .lede{max-width:70ch;}
   .callout{max-width:72ch;}
@@ -406,27 +409,6 @@ body{
     <div class="callout">10 forklifts. 1 computer fails. Output doesn't fall 10% &mdash; other people and equipment absorb it. The real hit is often just <b>2&ndash;3%</b>. Applied to a warehouse's full daily output, that's still real money.</div>
   </section>
 
-  <section class="section">
-    <p class="adjust-note">Adjust the number to see what the wrong computers do to your bottom line</p>
-    <div class="panel">
-      <div class="field-grid">
-        <div class="field">
-          <label for="annualOutput">Annual warehouse output</label>
-          <div class="num-input"><span class="affix">$</span><input id="annualOutput" type="text"
-            inputmode="numeric" autocomplete="off" value="50,000,000"></div>
-        </div>
-        <div class="field">
-          <label for="workingDays">Working days per year</label>
-          <div class="num-input"><input id="workingDays" type="number" min="1" step="1" value="250"><span class="affix">days</span></div>
-        </div>
-        <div class="field">
-          <label for="fleetSize">Units / Vehicles</label>
-          <div class="num-input"><input id="fleetSize" type="number" min="1" step="1" value="10"><span class="affix">units</span></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <section class="impact-hero">
     <div class="sub">Daily warehouse output: <span class="mono" id="dailyOutputOut">$200,000</span> / day</div>
     <div class="eyebrow">Daily bottom-line impact, one computer down</div>
@@ -460,6 +442,27 @@ body{
       <div class="eyebrow">If two computers are down at the same time</div>
       <div class="two-down-num mono" id="twoDownOut">$0</div>
       <div class="two-down-math" id="twoDownMath"></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <p class="adjust-note">Adjust the number to see what the wrong computers do to your bottom line</p>
+    <div class="panel">
+      <div class="field-grid">
+        <div class="field">
+          <label for="annualOutput">Annual warehouse output</label>
+          <div class="num-input"><span class="affix">$</span><input id="annualOutput" type="text"
+            inputmode="numeric" autocomplete="off" value="50,000,000"></div>
+        </div>
+        <div class="field">
+          <label for="workingDays">Working days per year</label>
+          <div class="num-input"><input id="workingDays" type="number" min="1" step="1" value="250"><span class="affix">days</span></div>
+        </div>
+        <div class="field">
+          <label for="fleetSize">Units / Vehicles</label>
+          <div class="num-input"><input id="fleetSize" type="number" min="1" step="1" value="10"><span class="affix">units</span></div>
+        </div>
+      </div>
     </div>
   </section>
 

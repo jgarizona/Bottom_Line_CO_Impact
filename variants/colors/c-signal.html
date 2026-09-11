@@ -404,27 +404,6 @@ body{padding-bottom:64px;}
     <div class="callout">10 forklifts. 1 computer fails. Output doesn't fall 10% &mdash; other people and equipment absorb it. The real hit is often just <b>2&ndash;3%</b>. Applied to a warehouse's full daily output, that's still real money.</div>
   </section>
 
-  <section class="section">
-    <p class="adjust-note">Adjust the number to see what the wrong computers do to your bottom line</p>
-    <div class="panel">
-      <div class="field-grid">
-        <div class="field">
-          <label for="annualOutput">Annual warehouse output</label>
-          <div class="num-input"><span class="affix">$</span><input id="annualOutput" type="text"
-            inputmode="numeric" autocomplete="off" value="50,000,000"></div>
-        </div>
-        <div class="field">
-          <label for="workingDays">Working days per year</label>
-          <div class="num-input"><input id="workingDays" type="number" min="1" step="1" value="250"><span class="affix">days</span></div>
-        </div>
-        <div class="field">
-          <label for="fleetSize">Units / Vehicles</label>
-          <div class="num-input"><input id="fleetSize" type="number" min="1" step="1" value="10"><span class="affix">units</span></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <section class="impact-hero">
     <div class="sub">Daily warehouse output: <span class="mono" id="dailyOutputOut">$200,000</span> / day</div>
     <div class="eyebrow">Daily bottom-line impact, one computer down</div>
@@ -458,6 +437,27 @@ body{padding-bottom:64px;}
       <div class="eyebrow">If two computers are down at the same time</div>
       <div class="two-down-num mono" id="twoDownOut">$0</div>
       <div class="two-down-math" id="twoDownMath"></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <p class="adjust-note">Adjust the number to see what the wrong computers do to your bottom line</p>
+    <div class="panel">
+      <div class="field-grid">
+        <div class="field">
+          <label for="annualOutput">Annual warehouse output</label>
+          <div class="num-input"><span class="affix">$</span><input id="annualOutput" type="text"
+            inputmode="numeric" autocomplete="off" value="50,000,000"></div>
+        </div>
+        <div class="field">
+          <label for="workingDays">Working days per year</label>
+          <div class="num-input"><input id="workingDays" type="number" min="1" step="1" value="250"><span class="affix">days</span></div>
+        </div>
+        <div class="field">
+          <label for="fleetSize">Units / Vehicles</label>
+          <div class="num-input"><input id="fleetSize" type="number" min="1" step="1" value="10"><span class="affix">units</span></div>
+        </div>
+      </div>
     </div>
   </section>
 

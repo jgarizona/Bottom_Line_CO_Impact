@@ -17,12 +17,15 @@ VARIANTS = [
 /* ---- 1. Sidebar Console ---- */
 @media (min-width:960px){
   body>.wrap{display:grid; grid-template-columns:330px minmax(0,1fr); gap:0 34px; align-items:start;}
+  /* child 2 is the impact card and child 3 the inputs panel: the number comes
+     before the fields that drive it. The rail is child 3. */
   body>.wrap>*:nth-child(1){grid-column:1 / -1;}
-  body>.wrap>*:nth-child(2){grid-column:1; grid-row:2 / span 7; position:sticky; top:24px; margin:0;}
-  body>.wrap>*:nth-child(2) .field-grid{grid-template-columns:1fr; gap:16px;}
-  body>.wrap>*:nth-child(2) .panel{padding:20px;}
-  body>.wrap>*:nth-child(n+3){grid-column:2; margin-top:0; margin-bottom:22px;}
-  body>.wrap>*:nth-child(3){margin-top:0;}
+  body>.wrap>*:nth-child(3){grid-column:1; grid-row:2 / span 7; position:sticky; top:24px; margin:0;}
+  body>.wrap>*:nth-child(3) .field-grid{grid-template-columns:1fr; gap:16px;}
+  body>.wrap>*:nth-child(3) .panel{padding:20px;}
+  body>.wrap>*:nth-child(2),
+  body>.wrap>*:nth-child(n+4){grid-column:2; margin-top:0; margin-bottom:22px;}
+  body>.wrap>*:nth-child(2){margin-top:0;}
   .hero h1{max-width:26ch;}
   .hero .lede{max-width:70ch;}
   .callout{max-width:72ch;}
@@ -34,8 +37,8 @@ VARIANTS = [
 @media (min-width:1000px){
   body>.wrap{display:grid; grid-template-columns:1fr 1fr; gap:0 40px; align-items:center;}
   body>.wrap>*:nth-child(1){grid-column:1; grid-row:1; padding-top:52px;}
-  body>.wrap>*:nth-child(3){grid-column:2; grid-row:1; margin:52px 0 6px;}
-  body>.wrap>*:nth-child(2){grid-column:1 / -1; grid-row:2;}
+  body>.wrap>*:nth-child(2){grid-column:2; grid-row:1; margin:52px 0 6px;}
+  body>.wrap>*:nth-child(3){grid-column:1 / -1; grid-row:2;}
   body>.wrap>*:nth-child(n+4){grid-column:1 / -1;}
   .hero h1{max-width:18ch; font-size:clamp(1.9rem,3.4vw,2.7rem);}
   .impact-hero{padding:44px 28px;}

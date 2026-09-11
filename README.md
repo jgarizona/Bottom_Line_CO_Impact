@@ -19,8 +19,8 @@ still works and falls back to system fonts.
 
 | Section | What it does |
 | --- | --- |
-| **Inputs** | Annual warehouse output, working days/year, fleet size, and the business-impact % of one unit being down (slider plus 1% / 2.5% / 5% presets). |
-| **Daily impact** | The headline number: what one day of one computer being down costs. Optionally shows the two-units-down case. |
+| **Daily impact** | The headline number, and the first thing on the page: what one day of one computer being down costs. Carries the business-impact control that drives it (slider, stepper and 1% / 2.5% / 5% presets, all three views of one value), a mirrored copy of the live ticker, and a conditional block for two or three units down together. |
+| **Inputs** | Annual warehouse output, working days/year and fleet size. Sits below the number it produces, under the line "Adjust the number to see what the wrong computers do to your bottom line". |
 | **Live ticker** | Paces the daily impact out in real time while a unit sits unavailable, and is mirrored into the hero card so it reads without scrolling. It counts **working** seconds, not calendar seconds — the label states the basis and the per-hour rate, and a full shift of ticking equals one down-day in the comparison below. Pause / reset / fast-forward (1 hr per 10 sec). |
 | **5-year comparison** | Four platform tiers — Consumer Grade, Semi-Rugged, Rugged, JLT Rugged — each priced by its own failure rate and restore time, with the delta against JLT. |
 | **Free Computers… Almost** | Per tier, how long its downtime losses take to add up to the $4,000 price of one JLT unit. |
@@ -41,9 +41,25 @@ fiveYearImpact     = annualImpact × 5
 breakevenYears     = $4,000 / annualImpact        (one JLT unit's price)
 ```
 
-Two-units-down is modeled as `impactPct + (2 × impactPct)` — the second concurrent failure is assumed
-to hurt twice as much as the first, since there's less slack left to absorb it. That 2× is an
-illustrative estimate, not a measured figure.
+`annualImpact` above is the flat-schedule form. What the code actually computes is the expected daily
+loss averaged over how many units are down at once, which reduces exactly to
+`exposureDaysPerYear × dailyImpact` when every unit is priced the same.
+
+Concurrent failures use a **marginal schedule**, not a multiplier: one entry per unit down, each set
+independently. Ticking "Additional cost with two systems down" reveals a stepper for the second unit,
+which inherits the current value so opening it changes nothing until it is moved; ticking again
+reveals a third. Each is a percentage of daily output in 0.5 steps with a floor of 1%, and the cost of
+*k* units down together is the sum of the first *k* entries — 2.5% + 2.0% + 1.5% is 6.0% for three,
+not a rate applied three times.
+
+How much of the year is spent with two or more units down follows from each platform's own failure
+rate and restore time (a Poisson exposure, λ = exposure-days ÷ working days), so a platform that fails
+often and takes longer to fix spends far more time there. In practice it is a small effect next to the
+impact slider. At the default settings, Consumer Grade's five-year figure across the whole range of
+schedules runs from $778k (2.5% + 2.0% + 1.5%, which is *below* the flat $787k, because a second unit
+priced under the base rate costs less than three at the base rate) to $892k at the maximum 2.5% + 8% +
+8% — about 13% at the extreme. The impact slider alone spans **$315k at 1% to $2.5M at 8%**. The
+slider is the lever that matters; concurrency is a refinement on top of it.
 
 The model deliberately has no spare-swap shortcut: every failure is assumed to run the full restore
 time. Where a customer keeps hot spares, lower the restore time to match.
@@ -81,9 +97,24 @@ This is a planning tool for a conversation, not a quote.
 ## Layout
 
 ```
-index.html    the entire tool — markup, styles, and logic in one file
-README.md     this file
+index.html                  the entire tool — markup, styles and logic in one file
+choose.html                 reviewer page: pick a layout and colour, preview it live, get a code like 2A
+tools/build-variants.py     generates the 5 layout previews from index.html
+tools/build-colors.py       generates the 5 colour schemes from index.html
+tools/build-combos.py       generates all 25 combinations, and choose.html
+variants/                   everything those three scripts produce — generated, never edited by hand
+.github/workflows/pages.yml deploys to GitHub Pages on every push to main
+README.md HANDOFF.md
+CHANGELOG.md TODO.md        this file, plus session handover notes, history and open items
 ```
 
-Keeping it to one file is intentional: it can be emailed, dropped on a shared drive, or opened from a
-USB stick in a warehouse with no network.
+**`index.html` is the single source of truth.** Every page under `variants/` is that file plus an
+appended override stylesheet, so copy, markup and JavaScript exist in exactly one place. Edit
+`index.html`, then run all three generators:
+
+```
+python3 tools/build-variants.py && python3 tools/build-colors.py && python3 tools/build-combos.py
+```
+
+Keeping the tool itself to one file is intentional: it can be emailed, dropped on a shared drive, or
+opened from a USB stick in a warehouse with no network.

@@ -7,9 +7,11 @@
 - [x] Process note confirmed in practice: a session's GitHub push access is fixed at session start from the repo picker. This session had `jgarizona/Bottom_Line_CO_Impact` selected up front and pushed with no 403.
 
 ## Live now
-The live site carries everything through the derived chart: the shift-basis ticker
-label, the aligned tiles, the estimate chart in Model assumptions, the 8/16/24
-shift stepper, and the narrow-screen overflow fixes.
+The live site is current as of commit `fb44a42`. It carries the shift-basis ticker
+label, the aligned comparison tiles, the derived estimate chart in Model
+assumptions, the narrow-phone overflow fixes, the 8-hour work day stated as a
+fixed assumption rather than an editable field, and the daily-impact card moved
+above the inputs panel so the number reads before the form.
 
 ## Open — needs Jeff
 - [ ] **Pick a layout and colour** at https://jgarizona.github.io/Bottom_Line_CO_Impact/choose.html

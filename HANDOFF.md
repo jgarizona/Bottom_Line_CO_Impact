@@ -44,7 +44,7 @@ all three or the previews go stale.
 - `dailyOutput = annualOutput / workingDays`
 - `dailyImpact = dailyOutput * (impactPct/100)`
 - `failuresPerYear = fleetSize * (failureRate/100)`
-- `annualImpact = failuresPerYear * repairDays * dailyImpact`
+- `annualImpact = failuresPerYear * repairDays * dailyImpact` (the flat-schedule form — see Concurrency below for what the code actually evaluates)
 - `fiveYear = annualImpact * 5`
 - Breakeven (non-JLT tiers): `JLT_UNIT_PRICE (4000) / tier.annualImpact`, shown in working days under a month, months under a year, else years.
 - Concurrency: each day some number of units are down together; the per-unit

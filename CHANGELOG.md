@@ -146,6 +146,23 @@
   the note above the fields at 390px, all nine children are present, and no two
   blocks overlap at 1400px.
 
+## Documentation corrections
+- README described two-units-down as `impactPct + (2 x impactPct)` -- the single 2x
+  multiplier that was replaced twice over, first by the per-unit marginal schedule
+  and then by the Poisson averaging. It now documents what the code does, including
+  that `annualImpact = exposureDaysPerYear x dailyImpact` is the flat-schedule form
+  of a larger expression, and it quotes measured sensitivities rather than
+  assertions: across every possible schedule Consumer Grade runs $778k to $892k
+  (about 13% at the extreme), while the impact slider alone spans $315k at 1% to
+  $2.5M at 8%.
+- README's "What's on the page" table is reordered to match the page, and the
+  business-impact control is described where it now lives -- in the daily-impact
+  card, not the inputs panel.
+- README's file listing said the repo was `index.html` plus `README.md`. It now
+  lists choose.html, the three generators, variants/, the workflow and the four
+  markdown files, and states that index.html is the single source of truth with the
+  command to regenerate everything.
+
 ## Brand and presentation
 - Palette taken from jltmobile.com: #fe5002 accent, #0f172a navy, #33333a body,
   #f2f2f2 page, #757575 muted, #f39200 amber. Neutrals moved from warm brown to
